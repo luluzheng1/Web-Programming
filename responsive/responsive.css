@@ -1,28 +1,29 @@
 @media screen 
-	and (min-device-width:1201px){software{.airplaneSafety 
-{width: 436px; height:580 px;
-background:url(images/software.png) 0 0px;}}}
+and (min-width:1201px){.software{ 
+width: 436px; height:580px;
+background:url(software.png) 0 0;}
+}
 
 @media screen 
-	and (max-device-width:1200px)
-	and (min-device-width:1001px){software{.elevatorSafety 
-{width: 435px; height:576 px;
-background:url(images/software.png) -436 0px;}}}
+and (max-width:1200px) and (min-width:1001px){.software{
+left: 430px; width: 435px; height:580px;
+background:url(software.png) -436px 0;}
+}
 
 @media screen 
-	and (max-device-width:1000px)
-	and (min-device-width:801px){software{.computerizedVoting 
-{width: 708px; height:619 px;
-background:url(images/software.png) -871 0px;}}}
+and (max-width:1000px) and (min-width:801px){.software{
+left: 873px; width: 335px; height:582px;
+background:url(software.png) -871px 0;}
+}
 
 @media screen 
-	and (max-device-width:800px)
-	and (min-device-width:601px){software{.waitReally 
-{width: 1204px; height:1211 px;
-background:url(images/software.png) 0 -580px;}}}
+and (max-width:800px) and (min-width:601px){.software{
+width: 715px; height:635px;
+background:url(software.png) 0 -580px;}
+}
 
 @media screen 
-	and (max-device-width:600px)
-	and (min-device-width: 1px) {software{.blockchain
-{width: 480px; height:616 px;
-background:url(images/software.png) -1204 -580px;}}}
+and (max-width:600px) and (min-width: 1px){ .software{
+width: 485px; height:625px;
+background:url(software.png) -720px -590px;}
+}
