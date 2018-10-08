@@ -10,12 +10,16 @@
 
 <h1 id="title">We Do</h1>
 
-<video src="https://www.cs.tufts.edu/comp/20/wedo.mp4" id="wedo" controls></video>
+<video src="https://www.cs.tufts.edu/comp/20/wedo.mp4" id="wedo" controls loop></video>
 <div id="lyrics"></div>
 
 
 <script>
 	function modifyText() {
+		if(this.currentTime >= 0 && this.currentTime < 4) {
+			var el = document.getElementById("lyrics");
+			el.innerHTML = " ";
+		}
 		if(this.currentTime >= 4 && this.currentTime < 6) {
 			var el = document.getElementById("lyrics");
 			el.innerHTML = "Who controls the British crown?";
@@ -69,6 +73,7 @@
 	var v = document.getElementById("wedo");
 	v.addEventListener("loadstart", function() { v.play(); }, true);
 	v.addEventListener("timeupdate", modifyText);
+
 </script>
 </body>
 </html>
