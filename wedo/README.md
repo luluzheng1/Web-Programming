@@ -1,4 +1,4 @@
-1. Testing index.html and style.css with the Parcel bundler on
+1. Testing index.html, index.js, and style.css with the Parcel bundler on
 localhost:1234 shows that all of the aspects of the assignment have been 
 implemented correctly.
 
