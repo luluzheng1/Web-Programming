@@ -24,32 +24,35 @@ function initMap() {
 	var cntsq = {lat: 42.365486, lng: -71.103802};
 	var brntn = {lat: 42.2078543, lng: -71.0011385};
 	
-
+	var icon = 'icon.png';
     map = new google.maps.Map(document.getElementById('map'), 
     	{ center: sstat, zoom: 14});
     //sstat_s = south station stop
-    var sstat_s = new google.maps.Marker({position: sstat, map: map});
-    var andrw_s = new google.maps.Marker({position: andrw, map: map});
-    var portr_s = new google.maps.Marker({position: portr, map: map});
-    var harsq_s = new google.maps.Marker({position: harsq, map: map});
-    var jfk_s = new google.maps.Marker({position: jfk, map: map});
-    var shmnl_s = new google.maps.Marker({position: shmnl, map: map});
-    var pktrm_s = new google.maps.Marker({position: pktrm, map: map});
-	var brdwy_s = new google.maps.Marker({position: brdwy, map: map});
-	var nqncy_s = new google.maps.Marker({position: nqncy, map: map});
-	var smmnl_s = new google.maps.Marker({position: smmnl, map: map});
-	var davis_s = new google.maps.Marker({position: davis, map: map});
-	var alfcl_s = new google.maps.Marker({position: alfcl, map: map});
-	var knncl_s = new google.maps.Marker({position: knncl, map: map});
-	var chmnl_s = new google.maps.Marker({position: chmnl, map: map});
-	var dwnxg_s = new google.maps.Marker({position: dwnxg, map: map});
-	var qnctr_s = new google.maps.Marker({position: qnctr, map: map});
-	var qamnl_s = new google.maps.Marker({position: qamnl, map: map});
-	var asmnl_s = new google.maps.Marker({position: asmnl, map: map});
-	var wlsta_s = new google.maps.Marker({position: wlsta, map: map});
-	var fldcr_s = new google.maps.Marker({position: fldcr, map: map});
-	var cntsq_s = new google.maps.Marker({position: cntsq, map: map});
-	var brntn_s = new google.maps.Marker({position: brntn, map: map});
+
+
+
+    var sstat_s = new google.maps.Marker({position: sstat, map: map, icon: 'icon.png'});
+    var andrw_s = new google.maps.Marker({position: andrw, map: map, icon: 'icon.png'});
+    var portr_s = new google.maps.Marker({position: portr, map: map, icon: 'icon.png'});
+    var harsq_s = new google.maps.Marker({position: harsq, map: map, icon: 'icon.png'});
+    var jfk_s = new google.maps.Marker({position: jfk, map: map, icon: 'icon.png'});
+    var shmnl_s = new google.maps.Marker({position: shmnl, map: map, icon: 'icon.png'});
+    var pktrm_s = new google.maps.Marker({position: pktrm, map: map, icon: 'icon.png'});
+	var brdwy_s = new google.maps.Marker({position: brdwy, map: map, icon: 'icon.png'});
+	var nqncy_s = new google.maps.Marker({position: nqncy, map: map, icon: 'icon.png'});
+	var smmnl_s = new google.maps.Marker({position: smmnl, map: map, icon: 'icon.png'});
+	var davis_s = new google.maps.Marker({position: davis, map: map, icon: 'icon.png'});
+	var alfcl_s = new google.maps.Marker({position: alfcl, map: map, icon: 'icon.png'});
+	var knncl_s = new google.maps.Marker({position: knncl, map: map, icon: 'icon.png'});
+	var chmnl_s = new google.maps.Marker({position: chmnl, map: map, icon: 'icon.png'});
+	var dwnxg_s = new google.maps.Marker({position: dwnxg, map: map, icon: 'icon.png'});
+	var qnctr_s = new google.maps.Marker({position: qnctr, map: map, icon: 'icon.png'});
+	var qamnl_s = new google.maps.Marker({position: qamnl, map: map, icon: 'icon.png'});
+	var asmnl_s = new google.maps.Marker({position: asmnl, map: map, icon: 'icon.png'});
+	var wlsta_s = new google.maps.Marker({position: wlsta, map: map, icon: 'icon.png'});
+	var fldcr_s = new google.maps.Marker({position: fldcr, map: map, icon: 'icon.png'});
+	var cntsq_s = new google.maps.Marker({position: cntsq, map: map, icon: 'icon.png'});
+	var brntn_s = new google.maps.Marker({position: brntn, map: map, icon: 'icon.png'});
 }
 
          
