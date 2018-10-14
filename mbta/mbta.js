@@ -1,8 +1,12 @@
 var map;
+var sstat;
+var andrw;
 
 function initMap() {
-	var sstat = {lat: 42.352271, lng: -71.05524200000001};
-	var andrw = {lat: 42.330154, lng: -71.057655};
+	directionsService = new google.maps.DirectionsService();
+   directionsDisplay = new google.maps.DirectionsRenderer();
+	sstat = {lat: 42.352271, lng: -71.05524200000001};
+	andrw = {lat: 42.330154, lng: -71.057655};
 	var portr = {lat: 42.3884, lng: -71.11914899999999};
 	var harsq = {lat: 42.373362, lng: -71.118956};
 	var jfk = {lat: 42.320685, lng: -71.052391};
@@ -24,13 +28,13 @@ function initMap() {
 	var cntsq = {lat: 42.365486, lng: -71.103802};
 	var brntn = {lat: 42.2078543, lng: -71.0011385};
 	
+	// var coordinates = [ sstat, andrw
+	// ];
+
 	var icon = 'icon.png';
     map = new google.maps.Map(document.getElementById('map'), 
     	{ center: sstat, zoom: 14});
     //sstat_s = south station stop
-
-
-
     var sstat_s = new google.maps.Marker({position: sstat, map: map, icon: 'icon.png'});
     var andrw_s = new google.maps.Marker({position: andrw, map: map, icon: 'icon.png'});
     var portr_s = new google.maps.Marker({position: portr, map: map, icon: 'icon.png'});
@@ -53,18 +57,48 @@ function initMap() {
 	var fldcr_s = new google.maps.Marker({position: fldcr, map: map, icon: 'icon.png'});
 	var cntsq_s = new google.maps.Marker({position: cntsq, map: map, icon: 'icon.png'});
 	var brntn_s = new google.maps.Marker({position: brntn, map: map, icon: 'icon.png'});
+	calcRoute(alfcl, brntn);
+	directionsDisplay.setMap(map);
+  // var path = new google.maps.Polyline({
+  //         path: coordinates,
+  //         geodesic: true,
+  //         strokeColor: '#FF0000',
+  //         strokeOpacity: 1.0,
+  //         strokeWeight: 2
+  //       });
+
+  //       path.setMap(map);
 }
 
-         
-// function southStation() {
-// 	 // The location of South Station
-//   var s_station = {lat: 42.352271, lng: -71.05524200000001};
-//   // The map, centered at 
-//   var map = new google.maps.Map(
-//       document.getElementById('map'), {zoom: 14, center: uluru});
-//   // The marker, positioned at Uluru
-//   var marker = new google.maps.Marker({position: uluru, map: map});
-//       }
+
+function calcRoute(s, e) {
+	console.log("hi");
+var start = s;
+var end = e;
+ var request = {
+    origin: start,
+    destination: end,
+    travelMode: 'TRANSIT',
+    transitOptions: {
+  modes: ['SUBWAY']
+}	
+};
+  directionsService.route(request, function(result, status) {
+    if (status == 'OK') {
+      directionsDisplay.setDirections(result);
+    }
+  });
+
+}
+
+// {
+//   origin: 'Hoboken NJ',
+//   destination: 'Carroll Gardens, Brooklyn',
+//   travelMode: 'TRANSIT',
+//   transitOptions: {
+//     departureTime: new Date(1337675679473),
+//     modes: ['BUS'],
+//     routingPreference: 'FEWER_TRANSFERS'
+//   },
+//   unitSystem: google.maps.UnitSystem.IMPERIAL
 // }
-
-
