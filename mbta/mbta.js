@@ -1,12 +1,10 @@
 var map;
-var sstat;
-var andrw;
 
 function initMap() {
 	directionsService = new google.maps.DirectionsService();
-   directionsDisplay = new google.maps.DirectionsRenderer();
-	sstat = {lat: 42.352271, lng: -71.05524200000001};
-	andrw = {lat: 42.330154, lng: -71.057655};
+    directionsDisplay = new google.maps.DirectionsRenderer();
+	var sstat = {lat: 42.352271, lng: -71.05524200000001};
+	var andrw = {lat: 42.330154, lng: -71.057655};
 	var portr = {lat: 42.3884, lng: -71.11914899999999};
 	var harsq = {lat: 42.373362, lng: -71.118956};
 	var jfk = {lat: 42.320685, lng: -71.052391};
@@ -28,77 +26,42 @@ function initMap() {
 	var cntsq = {lat: 42.365486, lng: -71.103802};
 	var brntn = {lat: 42.2078543, lng: -71.0011385};
 	
-	// var coordinates = [ sstat, andrw
-	// ];
+	var ashmont = [
+		alfcl, davis, portr, harsq, cntsq, knncl, chmnl, pktrm, dwnxg, 
+		sstat, brdwy, andrw, jfk, shmnl, fldcr, smmnl, asmnl 
+		];
+		  
+	var braintree = [
+		shmnl, nqncy, wlsta, qnctr, qamnl, brntn
+	];
 
 	var icon = 'icon.png';
     map = new google.maps.Map(document.getElementById('map'), 
     	{ center: sstat, zoom: 14});
     //sstat_s = south station stop
-    var sstat_s = new google.maps.Marker({position: sstat, map: map, icon: 'icon.png'});
-    var andrw_s = new google.maps.Marker({position: andrw, map: map, icon: 'icon.png'});
-    var portr_s = new google.maps.Marker({position: portr, map: map, icon: 'icon.png'});
-    var harsq_s = new google.maps.Marker({position: harsq, map: map, icon: 'icon.png'});
-    var jfk_s = new google.maps.Marker({position: jfk, map: map, icon: 'icon.png'});
-    var shmnl_s = new google.maps.Marker({position: shmnl, map: map, icon: 'icon.png'});
-    var pktrm_s = new google.maps.Marker({position: pktrm, map: map, icon: 'icon.png'});
-	var brdwy_s = new google.maps.Marker({position: brdwy, map: map, icon: 'icon.png'});
-	var nqncy_s = new google.maps.Marker({position: nqncy, map: map, icon: 'icon.png'});
-	var smmnl_s = new google.maps.Marker({position: smmnl, map: map, icon: 'icon.png'});
-	var davis_s = new google.maps.Marker({position: davis, map: map, icon: 'icon.png'});
-	var alfcl_s = new google.maps.Marker({position: alfcl, map: map, icon: 'icon.png'});
-	var knncl_s = new google.maps.Marker({position: knncl, map: map, icon: 'icon.png'});
-	var chmnl_s = new google.maps.Marker({position: chmnl, map: map, icon: 'icon.png'});
-	var dwnxg_s = new google.maps.Marker({position: dwnxg, map: map, icon: 'icon.png'});
-	var qnctr_s = new google.maps.Marker({position: qnctr, map: map, icon: 'icon.png'});
-	var qamnl_s = new google.maps.Marker({position: qamnl, map: map, icon: 'icon.png'});
-	var asmnl_s = new google.maps.Marker({position: asmnl, map: map, icon: 'icon.png'});
-	var wlsta_s = new google.maps.Marker({position: wlsta, map: map, icon: 'icon.png'});
-	var fldcr_s = new google.maps.Marker({position: fldcr, map: map, icon: 'icon.png'});
-	var cntsq_s = new google.maps.Marker({position: cntsq, map: map, icon: 'icon.png'});
-	var brntn_s = new google.maps.Marker({position: brntn, map: map, icon: 'icon.png'});
-	calcRoute(alfcl, brntn);
-	directionsDisplay.setMap(map);
-  // var path = new google.maps.Polyline({
-  //         path: coordinates,
-  //         geodesic: true,
-  //         strokeColor: '#FF0000',
-  //         strokeOpacity: 1.0,
-  //         strokeWeight: 2
-  //       });
-
-  //       path.setMap(map);
-}
-
-
-function calcRoute(s, e) {
-	console.log("hi");
-var start = s;
-var end = e;
- var request = {
-    origin: start,
-    destination: end,
-    travelMode: 'TRANSIT',
-    transitOptions: {
-  modes: ['SUBWAY']
-}	
-};
-  directionsService.route(request, function(result, status) {
-    if (status == 'OK') {
-      directionsDisplay.setDirections(result);
+    var a_stops = [17];
+    for(i = 0; i < 17; i++) {
+    	a_stops[i] = new google.maps.Marker({position: ashmont[i], map: map, icon: 'icon.png'});
     }
-  });
+    var b_stops = [6];
+    for(j = 0; j < 6; j++) {
+    	b_stops[j] = new google.maps.Marker({position: braintree[j], map: map, icon: 'icon.png'});
+    }
 
+	var ashmont = new google.maps.Polyline({
+		path: ashmont,
+		strokeColor: '#FF0000',
+		strokeOpacity: 1.0,
+		strokeWeight: 2
+	});
+
+	var braintree = new google.maps.Polyline({
+		path: braintree,
+		strokeColor: '#FF0000',
+		strokeOpacity: 1.0,
+		strokeWeight: 2
+	});
+
+ 	ashmont.setMap(map);
+ 	braintree.setMap(map);
 }
-
-// {
-//   origin: 'Hoboken NJ',
-//   destination: 'Carroll Gardens, Brooklyn',
-//   travelMode: 'TRANSIT',
-//   transitOptions: {
-//     departureTime: new Date(1337675679473),
-//     modes: ['BUS'],
-//     routingPreference: 'FEWER_TRANSFERS'
-//   },
-//   unitSystem: google.maps.UnitSystem.IMPERIAL
-// }
