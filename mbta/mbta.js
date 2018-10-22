@@ -1,35 +1,39 @@
 var map, infoWindow;
 
 function initMap() {
+	var sstat = {lat: 42.352271, lng: -71.05524200000001, name: "South Station"};
+	var andrw = {lat: 42.330154, lng: -71.057655, name: "Andrew"};
+	var portr = {lat: 42.3884, lng: -71.11914899999999, name: "Porter Square"};
+	var harsq = {lat: 42.373362, lng: -71.118956, name: "Harvard Square"};
+	var jfk = {lat: 42.320685, lng: -71.052391, name: "JFK/UMass"};
+	var shmnl = {lat: 42.31129, lng: -71.053331, name: "Savin Hill"};
+	var pktrm = {lat: 42.35639457, lng: -71.0624242, name: "Park Street"};
+	var brdwy = {lat: 42.342622, lng: -71.056967, name: "Broadway"};
+	var nqncy = {lat: 42.275275, lng: -71.029583, name: "North Quincy"};
+	var smmnl = {lat: 42.29312583, lng: -71.06573796000001, name: "Shawmut"};
+	var davis = {lat: 42.39674, lng: -71.121815, name: "Davis"};
+	var alfcl = {lat: 42.395428, lng: -71.142483, name: "Alewife"};
+	var knncl = {lat: 42.36249079, lng: -71.08617653, name: "Kendall/MIT"};
+	var chmnl = {lat: 42.361166, lng: -71.070628, name: "Charles/MGH"};
+	var dwnxg = {lat: 42.355518, lng: -71.060225, name: "Downtown Crossing"};
+	var qnctr = {lat: 42.251809, lng: -71.005409, name: "Quincy Center"};
+	var qamnl = {lat: 42.233391, lng: -71.007153, name: "Quincy Adams"};
+	var asmnl = {lat: 42.284652, lng: -71.06448899999999, name: "Ashmont"};
+	var wlsta = {lat: 42.2665139, lng: -71.0203369, name: "Wollaston"};
+	var fldcr = {lat: 42.300093, lng: -71.061667, name: "Fields Corner"};
+	var cntsq = {lat: 42.365486, lng: -71.103802, name: "Central Square"};
+	var brntn = {lat: 42.2078543, lng: -71.0011385, name: "Braintree"};
 	
-	var sstat = {lat: 42.352271, lng: -71.05524200000001};
-	var andrw = {lat: 42.330154, lng: -71.057655};
-	var portr = {lat: 42.3884, lng: -71.11914899999999};
-	var harsq = {lat: 42.373362, lng: -71.118956};
-	var jfk = {lat: 42.320685, lng: -71.052391};
-	var shmnl = {lat: 42.31129, lng: -71.053331};
-	var pktrm = {lat: 42.35639457, lng: -71.0624242};
-	var brdwy = {lat: 42.342622, lng: -71.056967};
-	var nqncy = {lat: 42.275275, lng: -71.029583};
-	var smmnl = {lat: 42.29312583, lng: -71.06573796000001};
-	var davis = {lat: 42.39674, lng: -71.121815};
-	var alfcl = {lat: 42.395428, lng: -71.142483};
-	var knncl = {lat: 42.36249079, lng: -71.08617653};
-	var chmnl = {lat: 42.361166, lng: -71.070628};
-	var dwnxg = {lat: 42.355518, lng: -71.060225};
-	var qnctr = {lat: 42.251809, lng: -71.005409};
-	var qamnl = {lat: 42.233391, lng: -71.007153};
-	var asmnl = {lat: 42.284652, lng: -71.06448899999999};
-	var wlsta = {lat: 42.2665139, lng: -71.0203369};
-	var fldcr = {lat: 42.300093, lng: -71.061667};
-	var cntsq = {lat: 42.365486, lng: -71.103802};
-	var brntn = {lat: 42.2078543, lng: -71.0011385};
-
+	var coordinates = [
+		sstat, andrw, portr, harsq, jfk, shmnl, pktrm, brdwy, nqncy, 
+		smmnl, davis, alfcl, knncl, chmnl, dwnxg, qnctr, qamnl, asmnl,
+		wlsta, fldcr, cntsq, brntn
+	];
+	//forking purposes
 	var ashmont = [
 		alfcl, davis, portr, harsq, cntsq, knncl, chmnl, pktrm, dwnxg, 
 		sstat, brdwy, andrw, jfk, shmnl, fldcr, smmnl, asmnl 
-	];
-		  
+	];	  
 	var braintree = [
 		shmnl, nqncy, wlsta, qnctr, qamnl, brntn
 	];
@@ -37,7 +41,7 @@ function initMap() {
 	var icon = 'icon.png';
 	//initiate map at user's location
    	map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: 42.4082, lng: -71.1160}, zoom: 14});
+    center: davis, zoom: 14});
    	infoWindow = new google.maps.InfoWindow;
    	if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
@@ -45,21 +49,44 @@ function initMap() {
             lat: position.coords.latitude,
             lng: position.coords.longitude
         };
-
-        infoWindow.setPosition(pos);
-        infoWindow.setContent('Location found.');
+        //mark current location
       	var my_location = new google.maps.Marker({
       		position: {lat: position.coords.latitude, lng: position.coords.longitude},
       		map: map
       	});
+      	//finding nearest station
+      	var distance = findDistance(pos, coordinates[0]);
+      	var stop_num = 0;
+      	for(var i = 0; i < 22; i++) {
+      		var temp = findDistance(pos, coordinates[i]);
+      		if(temp < distance) {
+      			distance = temp;
+      			stop_num = i;
+      		}
+      	}
+      	//polyline to nearest station
+      	var my_path = [pos, coordinates[stop_num]];
+      	var nearest_path = new google.maps.Polyline({
+		path: my_path,
+		strokeColor: '#00FF00',
+		strokeOpacity: 1.0,
+		strokeWeight: 2
+		});
+		nearest_path.setMap(map);
+      	//display distance in infowindow
+      	var miles = distance /= 1.60934;	//miles
+      	miles = miles.toFixed(2);
+        infoWindow.setPosition(pos);
+       	//display nearest station name in infowindow
+        key = Object.keys(coordinates[stop_num]);
+        var coords = coordinates[stop_num];
+        var content = 'nearest station: ' + coords[key[2]] + ' ' + miles + ' miles';
+        infoWindow.setContent(content);
+
       	my_location.addListener('click', function() {
       		infoWindow.open(map, my_location);
       	});
-
-      	for(int i = 0; i < 22; i++) {
-      		findDistance(sstat, davis);
-      	}
-      	
+      	//centers map at current location
       	map.setCenter(pos);
         }, function() {
             handleLocationError(true, infoWindow, map.getCenter());
@@ -117,7 +144,7 @@ function findDistance(coords1, coords2) {
 	var lon1 = coords1[key1[1]];
 
 	var R = 6371; // km 
-//has a problem with the .toRad() method below.
+
 	var x1 = lat2-lat1;
 	var dLat = x1.toRad();  
 	var x2 = lon2-lon1;
@@ -127,6 +154,5 @@ function findDistance(coords1, coords2) {
                 Math.sin(dLon/2) * Math.sin(dLon/2);  
 	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
 	var d = R * c; 
-
-	console.log(d);
+	return d;
 }
