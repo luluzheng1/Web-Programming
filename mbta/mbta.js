@@ -1,5 +1,4 @@
 var map, infoWindow;
-
 function initMap() {
 	var sstat = {lat: 42.352271, lng: -71.05524200000001, name: "South Station"};
 	var andrw = {lat: 42.330154, lng: -71.057655, name: "Andrew"};
@@ -155,4 +154,47 @@ function findDistance(coords1, coords2) {
 	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
 	var d = R * c; 
 	return d;
+}
+
+function loadContent() {
+	
+	request = new XMLHttpRequest();
+	//console.log("1");
+	request.open("GET", 
+		"https://api-v3.mbta.com/predictions?filter[route]=Red&filter[stop]=place-davis&page[limit]=10&page[offset]=0&sort=departure_time&api_key=6545bf2bfe4e40928aca721593594135",
+		 true);
+	
+	request.onreadystatechange = function() {
+	if(request.readyState == 4 && request.status == 200) {
+		data = request.responseText;
+		content = JSON.parse(data);
+		
+		time = "";
+		var total = content.data.length;
+		for (i = 0; i < total; i++) {
+			
+			word = content.data[i].attributes.arrival_time[11];
+			word += content.data[i].attributes.arrival_time[12];
+			word += content.data[i].attributes.arrival_time[13];
+			word += content.data[i].attributes.arrival_time[14];
+			word += content.data[i].attributes.arrival_time[15];
+
+			time += word + "<br/>";
+
+		}
+		return time;
+		//console.log("5");
+
+	}
+	else if (request.readyState == 4 && request.status != 200) {
+		time = "Error";
+	}
+	else if (request.readyState == 3) {
+		time = "Loading...";
+	}
+
+	
+	}
+	request.send();
+
 }

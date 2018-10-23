@@ -7,16 +7,15 @@
 <meta name="viewport" content="initial-scale=1.0">
 <meta charset="utf-8">
 <link rel="stylesheet" href="style.css" type="text/css" />
-</head>
-
-<body>
-<div id="map"></div>
-<div id="location"></div>
-
-
 <script type="text/javascript" src="mbta.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAcd7Len218RnbVV-yC8Ru3S_Vf2S-WN7w&libraries=geometry,places&callback=initMap"
     async defer></script>
+</head>
+
+<body onload = "loadContent()">
+<div id="map"></div>
+<div id="content"></div>
+
 
 </body>
 
