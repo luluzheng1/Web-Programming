@@ -1,4 +1,7 @@
 var map, infoWindow;
+
+
+
 function initMap() {
 	var sstat = {lat: 42.352271, lng: -71.05524200000001, name: "South Station"};
 	var andrw = {lat: 42.330154, lng: -71.057655, name: "Andrew"};
@@ -23,20 +26,44 @@ function initMap() {
 	var cntsq = {lat: 42.365486, lng: -71.103802, name: "Central Square"};
 	var brntn = {lat: 42.2078543, lng: -71.0011385, name: "Braintree"};
 	
-	var coordinates = [
+	winds = [
+	{lat: 42.395428, lng: -71.142483},
+	{lat: 42.39674, lng: -71.121815},
+	{lat: 42.3884, lng: -71.11914899999999}, 
+	{lat: 42.373362, lng: -71.118956},
+	{lat: 42.365486, lng: -71.103802},
+	{lat: 42.36249079, lng: -71.08617653},
+	{lat: 42.361166, lng: -71.070628},
+	{lat: 42.35639457, lng: -71.0624242},
+	{lat: 42.355518, lng: -71.060225},
+	{lat: 42.352271, lng: -71.05524200000001},
+	{lat: 42.342622, lng: -71.056967},
+	{lat: 42.330154, lng: -71.057655},
+	{lat: 42.320685, lng: -71.052391},
+	{lat: 42.31129, lng: -71.053331},
+	{lat: 42.300093, lng: -71.061667},
+	{lat: 42.29312583, lng: -71.06573796000001},
+	{lat: 42.284652, lng: -71.06448899999999}
+	];
+
+	coordinates = [
 		sstat, andrw, portr, harsq, jfk, shmnl, pktrm, brdwy, nqncy, 
 		smmnl, davis, alfcl, knncl, chmnl, dwnxg, qnctr, qamnl, asmnl,
 		wlsta, fldcr, cntsq, brntn
 	];
 	//forking purposes
-	var ashmont = [
+	ashmont = [
 		alfcl, davis, portr, harsq, cntsq, knncl, chmnl, pktrm, dwnxg, 
 		sstat, brdwy, andrw, jfk, shmnl, fldcr, smmnl, asmnl 
 	];	  
-	var braintree = [
+	braintree = [
 		shmnl, nqncy, wlsta, qnctr, qamnl, brntn
 	];
 
+	stop_name = [
+		"alfcl", "davis", "portr", "harsq", "cntsq", "knncl", "chmnl", "pktrm", "dwnxg", 
+		"sstat", "brdwy", "andrw", "jfk", "shmnl", "fldcr", "smmnl", "asmnl" 
+	];
 	var icon = 'icon.png';
 	//initiate map at user's location
    	map = new google.maps.Map(document.getElementById('map'), {
@@ -102,16 +129,65 @@ function initMap() {
                               'Error: Your browser doesn\'t support geolocation.');
         infoWindow.open(map);
     }
-    
+
     //mark stations w icon
-    var a_stops = [17];
-    for(i = 0; i < 17; i++) {
+    a_stops = [17];
+	b_stops = [6];
+    for(var i = 0; i < 17; i++) {
+    	console.log(i);
     	a_stops[i] = new google.maps.Marker({position: ashmont[i], map: map, icon: 'icon.png'});
-    }
-    var b_stops = [6];
-    for(j = 0; j < 6; j++) {
-    	b_stops[j] = new google.maps.Marker({position: braintree[j], map: map, icon: 'icon.png'});
-    }
+    	console.log(a_stops[i]);
+    	var wind = new google.maps.InfoWindow;
+		wind.setPosition(winds[i]);
+		a_stops[i].addListener('click', function() {
+      			wind.open(map, a_stops[i]);
+      		});
+		
+    	var request = new XMLHttpRequest();
+    	placeid = "place-" + stop_name[i];
+ 		var url = "https://api-v3.mbta.com/predictions?filter[route]=Red&filter[stop]=" + placeid + "&page[limit]=10&page[offset]=0&sort=departure_time&api_key=6545bf2bfe4e40928aca721593594135";
+		request.open("GET", url, true);
+		
+
+    	request.onreadystatechange = function() {
+    		//console.log(i);
+    		console.log("here!");
+			if(request.readyState == 4 && request.status == 200) {
+				data = request.responseText;
+				content = JSON.parse(data);
+		
+				time = "";
+			var total = content.data.length;
+			for (j = 0; j < total; j++) {
+				word = content.data[j].attributes.arrival_time[11];
+				word += content.data[j].attributes.arrival_time[12];
+				word += content.data[j].attributes.arrival_time[13];
+				word += content.data[j].attributes.arrival_time[14];
+				word += content.data[j].attributes.arrival_time[15];
+				console.log(word);
+				time += word + "<br/>";
+			}
+			//i = 0;
+
+	 		wind.setContent(time);
+	 		
+			}
+		
+		}
+	// 	else if (request.readyState == 4 && request.status != 200) {
+	// 		time = "Error";
+	// 	}
+	// 	else if (request.readyState == 3) {
+	// 		time = "Loading...";
+	// 	}
+
+	// }
+	request.send();
+}
+    // var b_stops = [6];
+    // for(j = 0; j < 6; j++) {
+    // 	b_stops[j] = new google.maps.Marker({position: braintree[j], map: map, icon: 'icon.png'});
+    // }
     //render polyline
 	var ashmont = new google.maps.Polyline({
 		path: ashmont,
@@ -156,45 +232,52 @@ function findDistance(coords1, coords2) {
 	return d;
 }
 
-function loadContent() {
+// function loadContent(map) {
+// 	console.log("1");
+// 	var wind = new google.maps.InfoWindow;
 	
-	request = new XMLHttpRequest();
-	//console.log("1");
-	request.open("GET", 
-		"https://api-v3.mbta.com/predictions?filter[route]=Red&filter[stop]=place-davis&page[limit]=10&page[offset]=0&sort=departure_time&api_key=6545bf2bfe4e40928aca721593594135",
-		 true);
+// 	request = new XMLHttpRequest();
+// 	// placeid = "place-davis";
+// 	// var url = "https://api-v3.mbta.com/predictions?filter[route]=Red&filter[stop]=" + placeid + "&page[limit]=10&page[offset]=0&sort=departure_time&api_key=6545bf2bfe4e40928aca721593594135";
+// 	// console.log(url);
+// 	request.open("GET", 
+// 		"https://api-v3.mbta.com/predictions?filter[route]=Red&filter[stop]=place-davis&page[limit]=10&page[offset]=0&sort=departure_time&api_key=6545bf2bfe4e40928aca721593594135",
+// 		 true);
 	
-	request.onreadystatechange = function() {
-	if(request.readyState == 4 && request.status == 200) {
-		data = request.responseText;
-		content = JSON.parse(data);
+// 	request.onreadystatechange = function() {
+// 	if(request.readyState == 4 && request.status == 200) {
+// 		data = request.responseText;
+// 		content = JSON.parse(data);
 		
-		time = "";
-		var total = content.data.length;
-		for (i = 0; i < total; i++) {
+// 		time = "";
+// 		var total = content.data.length;
+// 		for (i = 0; i < total; i++) {
 			
-			word = content.data[i].attributes.arrival_time[11];
-			word += content.data[i].attributes.arrival_time[12];
-			word += content.data[i].attributes.arrival_time[13];
-			word += content.data[i].attributes.arrival_time[14];
-			word += content.data[i].attributes.arrival_time[15];
+// 			word = content.data[i].attributes.arrival_time[11];
+// 			word += content.data[i].attributes.arrival_time[12];
+// 			word += content.data[i].attributes.arrival_time[13];
+// 			word += content.data[i].attributes.arrival_time[14];
+// 			word += content.data[i].attributes.arrival_time[15];
 
-			time += word + "<br/>";
+// 			time += word + "<br/>";
+// 		}
+// 		pos = {lat: 42.39674, lng: -71.121815};
+		
 
-		}
-		return time;
-		//console.log("5");
+// 	 	a_stops[1].addListener('click', function() {
+//       		wind.setPosition(pos);
+// 	 		wind.setContent(time);
+//       		wind.open(map, pos);
+//       	});
+// 	}
+// 	else if (request.readyState == 4 && request.status != 200) {
+// 		time = "Error";
+// 	}
+// 	else if (request.readyState == 3) {
+// 		time = "Loading...";
+// 	}
 
-	}
-	else if (request.readyState == 4 && request.status != 200) {
-		time = "Error";
-	}
-	else if (request.readyState == 3) {
-		time = "Loading...";
-	}
+// 	}
+// 	request.send();
 
-	
-	}
-	request.send();
-
-}
+// }
