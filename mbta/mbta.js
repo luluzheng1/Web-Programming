@@ -24,45 +24,43 @@ function initMap() {
 	brntn = {lat: 42.2078543, lng: -71.0011385, name: "Braintree"};
 	
 	winds = [
-	{lat: 42.395428, lng: -71.142483},
-	{lat: 42.39674, lng: -71.121815},
-	{lat: 42.3884, lng: -71.11914899999999}, 
-	{lat: 42.373362, lng: -71.118956},
-	{lat: 42.365486, lng: -71.103802},
-	{lat: 42.36249079, lng: -71.08617653},
-	{lat: 42.361166, lng: -71.070628},
-	{lat: 42.35639457, lng: -71.0624242},
-	{lat: 42.355518, lng: -71.060225},
-	{lat: 42.352271, lng: -71.05524200000001},
-	{lat: 42.342622, lng: -71.056967},
-	{lat: 42.330154, lng: -71.057655},
-	{lat: 42.320685, lng: -71.052391},
-	{lat: 42.31129, lng: -71.053331},
-	{lat: 42.300093, lng: -71.061667},
-	{lat: 42.29312583, lng: -71.06573796000001},
-	{lat: 42.284652, lng: -71.06448899999999},
-	{lat: 42.31129, lng: -71.053331},
-	{lat: 42.275275, lng: -71.029583},
-	{lat: 42.251809, lng: -71.005409},
-	{lat: 42.233391, lng: -71.007153},
-	{lat: 42.2078543, lng: -71.0011385}
+		{lat: 42.395428, lng: -71.142483},
+		{lat: 42.39674, lng: -71.121815},
+		{lat: 42.3884, lng: -71.11914899999999}, 
+		{lat: 42.373362, lng: -71.118956},
+		{lat: 42.365486, lng: -71.103802},
+		{lat: 42.36249079, lng: -71.08617653},
+		{lat: 42.361166, lng: -71.070628},
+		{lat: 42.35639457, lng: -71.0624242},
+		{lat: 42.355518, lng: -71.060225},
+		{lat: 42.352271, lng: -71.05524200000001},
+		{lat: 42.342622, lng: -71.056967},
+		{lat: 42.330154, lng: -71.057655},
+		{lat: 42.320685, lng: -71.052391},
+		{lat: 42.31129, lng: -71.053331},
+		{lat: 42.300093, lng: -71.061667},
+		{lat: 42.29312583, lng: -71.06573796000001},
+		{lat: 42.284652, lng: -71.06448899999999},
+		{lat: 42.31129, lng: -71.053331},
+		{lat: 42.275275, lng: -71.029583},
+		{lat: 42.251809, lng: -71.005409},
+		{lat: 42.233391, lng: -71.007153},
+		{lat: 42.2078543, lng: -71.0011385}
 	];
 
 	coordinates = [
-		alfcl, davis, portr, harsq, cntsq, knncl, chmnl, pktrm, dwnxg, 
-		sstat, brdwy, andrw, jfk, shmnl, fldcr, smmnl, asmnl, shmnl,
-		nqncy, qnctr, qamnl, brntn
+		alfcl, davis, portr, harsq, cntsq, knncl, chmnl, pktrm, dwnxg, sstat, brdwy, 
+		andrw, jfk, shmnl, fldcr, smmnl, asmnl, shmnl, nqncy, qnctr, qamnl, brntn
 	];
 
 	closest = [
-		alfcl, davis, portr, harsq, cntsq, knncl, chmnl, pktrm, dwnxg, 
-		sstat, brdwy, andrw, jfk, shmnl, fldcr, smmnl, asmnl, shmnl,
-		nqncy, wlsta, qnctr, qamnl, brntn
+		alfcl, davis, portr, harsq, cntsq, knncl, chmnl, pktrm, dwnxg, sstat, brdwy,
+		andrw, jfk, shmnl, fldcr, smmnl, asmnl, shmnl, nqncy, wlsta, qnctr, qamnl, brntn
 	];
 	//forking purposes
 	ashmont = [
-		alfcl, davis, portr, harsq, cntsq, knncl, chmnl, pktrm, dwnxg, 
-		sstat, brdwy, andrw, jfk, shmnl, fldcr, smmnl, asmnl 
+		alfcl, davis, portr, harsq, cntsq, knncl, chmnl, pktrm, dwnxg, sstat, brdwy, 
+		andrw, jfk, shmnl, fldcr, smmnl, asmnl 
 	];	
 
 	braintree = [
@@ -80,6 +78,7 @@ function initMap() {
    	map = new google.maps.Map(document.getElementById('map'), {
     center: davis, zoom: 14});
    	infoWindow = new google.maps.InfoWindow;
+   	
    	if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
         var pos = {
@@ -91,7 +90,6 @@ function initMap() {
       		position: {lat: position.coords.latitude, lng: position.coords.longitude},
       		map: map
       	});
-      	//mark wollaston
       	Wollaston();
       	//finding nearest station
       	var distance = findDistance(pos, closest[0]);
@@ -106,10 +104,10 @@ function initMap() {
       	//polyline to nearest station
       	var my_path = [pos, coordinates[stop_num]];
       	var nearest_path = new google.maps.Polyline({
-		path: my_path,
-		strokeColor: '#00FF00',
-		strokeOpacity: 1.0,
-		strokeWeight: 2
+			path: my_path,
+			strokeColor: '#00FF00',
+			strokeOpacity: 1.0,
+			strokeWeight: 2
 		});
 		nearest_path.setMap(map);
       	//display distance in infowindow
@@ -131,18 +129,17 @@ function initMap() {
             handleLocationError(true, infoWindow, map.getCenter());
         });
         } else {
-          // Browser doesn't support Geolocation
+          // browser doesn't support Geolocation
         	handleLocationError(false, infoWindow, map.getCenter());
         }
 
-    function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-    	infoWindow.setPosition(pos);
-        infoWindow.setContent(browserHasGeolocation ?
-                              'Error: The Geolocation service failed.' :
-                              'Error: Your browser doesn\'t support geolocation.');
-        infoWindow.open(map);
-    }
-   
+    	function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+    		infoWindow.setPosition(pos);
+        	infoWindow.setContent(browserHasGeolocation ?
+                'Error: The Geolocation service failed.' :
+                'Error: Your browser doesn\'t support geolocation.');
+        	infoWindow.open(map);
+    	}
     //render polyline
 	a = new google.maps.Polyline({
 		path: ashmont,
@@ -150,7 +147,6 @@ function initMap() {
 		strokeOpacity: 1.0,
 		strokeWeight: 2
 	});
-
 	b = new google.maps.Polyline({
 		path: braintree,
 		strokeColor: '#FF0000',
@@ -165,48 +161,40 @@ function initMap() {
 function loadContent() {
 	var time = "";
 	var nRequest = new Array();
-	for (var i= 0; i< 22; i++){ 
-   		(function(i) {
-      		nRequest[i] = new XMLHttpRequest();
-
-      		placeid = "place-" + stop_name[i];
- 			var url = "https://api-v3.mbta.com/predictions?filter[route]=Red&filter[stop]=" + 
- 					   placeid + 
- 					  "&page[limit]=10&page[offset]=0&sort=departure_time&api_key=6545bf2bfe4e40928aca721593594135";
-			nRequest[i].open("GET", url, true);
-			
-      		nRequest[i].onreadystatechange = function (oEvent) {
-         		if (nRequest[i].readyState === 4) {
-            		if (nRequest[i].status === 200) {
-            			data = nRequest[i].responseText;
-						content = JSON.parse(data);
-						//var total = content.data.length;
-						time = "";
-						console.log(i);
-						for (j = 0; j < 4; j++) {
-							if(content.data[j] == undefined ||
-								content.data[j].attributes.arrival_time == null) {
-								word = "Time Unavailable";
-							}
-							else
-							{
-							word = content.data[j].attributes.arrival_time[11];
-							word += content.data[j].attributes.arrival_time[12];
-							word += content.data[j].attributes.arrival_time[13];
-							word += content.data[j].attributes.arrival_time[14];
-							word += content.data[j].attributes.arrival_time[15];
-							}
-							time += word + "<br/>";
-            			}
-            			cb(time, i);
-
-            		} else {
-              			console.log("Error", nRequest[i].statusText);
-            		}
-         		}
-      		};
-      		nRequest[i].send(null);
-   		})(i);
+	for (var i= 0; i< 22; i++){ (function(i) {
+		nRequest[i] = new XMLHttpRequest();
+		placeid = "place-" + stop_name[i];
+		var url = "https://api-v3.mbta.com/predictions?filter[route]=Red&filter[stop]=" + placeid
+		+ "&page[limit]=10&page[offset]=0&sort=departure_time&api_key=6545bf2bfe4e40928aca721593594135";
+		nRequest[i].open("GET", url, true);			
+		nRequest[i].onreadystatechange = function (oEvent) {
+			if (nRequest[i].readyState === 4 && nRequest[i].status === 200) {
+				data = nRequest[i].responseText;
+				content = JSON.parse(data);
+				time = "";
+				for (j = 0; j < 4; j++) {
+					if(content.data[j] == undefined ||
+						content.data[j].attributes.arrival_time == null) {
+						word = "Time Unavailable";
+					} else {
+						if(content.data[j].attributes.direction_id === 0) {
+							word = "SouthBound: <br/>";
+						} else {
+							word = "NorthBound: <br/>"; 
+						}
+						word += content.data[j].attributes.arrival_time[11];
+						word += content.data[j].attributes.arrival_time[12];
+						word += content.data[j].attributes.arrival_time[13];
+						word += content.data[j].attributes.arrival_time[14];
+						word += content.data[j].attributes.arrival_time[15];
+					}
+					time += word + "<br/>";
+				}
+				cb(time, i);
+			}
+		};
+		nRequest[i].send(null);
+	})(i);
 	}	
 }
 
@@ -222,7 +210,7 @@ function cb(time, index) {
 
 function findDistance(coords1, coords2) {
 	Number.prototype.toRad = function() {
-   	return this * Math.PI / 180;
+   		return this * Math.PI / 180;
 	}
 	key2 = Object.keys(coords2);
 	key1 = Object.keys(coords1);
@@ -238,56 +226,51 @@ function findDistance(coords1, coords2) {
 	var x2 = lon2-lon1;
 	var dLon = x2.toRad();  
 	var a = Math.sin(dLat/2) * Math.sin(dLat/2) + 
-                Math.cos(lat1.toRad()) * Math.cos(lat2.toRad()) * 
-                Math.sin(dLon/2) * Math.sin(dLon/2);  
+            Math.cos(lat1.toRad()) * Math.cos(lat2.toRad()) * 
+            Math.sin(dLon/2) * Math.sin(dLon/2);  
 	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
 	var d = R * c; 
 	return d;
 }
 
 function make_window(time, i) {
-	//console.log(i);
 	wind = new google.maps.InfoWindow({ content: time });
 	marker = new google.maps.Marker({
     	position: winds[i],
     	map: map,
     	icon:'icon.png',
         info: time
-        });
+    });
         
-        google.maps.event.addListener( marker, 'click', function() {
-  		wind.setContent( this.info );
-   		wind.open( map, this );
+    google.maps.event.addListener( marker, 'click', function() {
+  	wind.setContent( this.info );
+   	wind.open( map, this );
 	});	
 	
-    	stops[i] = new google.maps.Marker({position: coordinates[i], map: map, icon: 'icon.png'});
-    	
-    	var wind = new google.maps.InfoWindow;
-		wind.setPosition(winds[i]);
-		
-		stops[i].addListener('click', function() {
-      			wind.open(map, stops[i]);
-      		});
-		
-	 		wind.setContent(time);
+    stops[i] = new google.maps.Marker({position: coordinates[i], map: map, icon: 'icon.png'});
+    var wind = new google.maps.InfoWindow;
+	wind.setPosition(winds[i]);
+	stops[i].addListener('click', function() {
+    	wind.open(map, stops[i]);
+    });
+	wind.setContent(time);
 }
 
 function Wollaston() {
 	var wollaston = new google.maps.Marker({
-      		position: {lat: 42.2665139, lng: -71.0203369},
-      		icon:'icon.png',
-      		map: map
-      	});
+      	position: {lat: 42.2665139, lng: -71.0203369},
+      	icon:'icon.png',
+      	map: map
+    });
 	var pos = {
-            lat: 42.2665139,
-            lng: -71.0203369
-        };
+        lat: 42.2665139,
+        lng: -71.0203369
+    };
 	wollaston_window = new google.maps.InfoWindow;
 	wollaston_window.setPosition(pos);
-	var content = "Wollaston" + "<br/>" + "Out of Service"
+	var content = "Wollaston" + "<br/>" + "Out of Service";
 	wollaston_window.setContent(content);
-
-      	wollaston.addListener('click', function() {
-      		wollaston_window.open(map, wollaston);
-      	});
+    wollaston.addListener('click', function() {
+      	wollaston_window.open(map, wollaston);
+    });
 }
