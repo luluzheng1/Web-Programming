@@ -1,30 +1,32 @@
 var map, infoWindow;
-
-
+var a_stops = [17];
+var b_stops = [6];
+var stop_name = [17];
+var winds = [17];
 
 function initMap() {
-	var sstat = {lat: 42.352271, lng: -71.05524200000001, name: "South Station"};
-	var andrw = {lat: 42.330154, lng: -71.057655, name: "Andrew"};
-	var portr = {lat: 42.3884, lng: -71.11914899999999, name: "Porter Square"};
-	var harsq = {lat: 42.373362, lng: -71.118956, name: "Harvard Square"};
-	var jfk = {lat: 42.320685, lng: -71.052391, name: "JFK/UMass"};
-	var shmnl = {lat: 42.31129, lng: -71.053331, name: "Savin Hill"};
-	var pktrm = {lat: 42.35639457, lng: -71.0624242, name: "Park Street"};
-	var brdwy = {lat: 42.342622, lng: -71.056967, name: "Broadway"};
-	var nqncy = {lat: 42.275275, lng: -71.029583, name: "North Quincy"};
-	var smmnl = {lat: 42.29312583, lng: -71.06573796000001, name: "Shawmut"};
-	var davis = {lat: 42.39674, lng: -71.121815, name: "Davis"};
-	var alfcl = {lat: 42.395428, lng: -71.142483, name: "Alewife"};
-	var knncl = {lat: 42.36249079, lng: -71.08617653, name: "Kendall/MIT"};
-	var chmnl = {lat: 42.361166, lng: -71.070628, name: "Charles/MGH"};
-	var dwnxg = {lat: 42.355518, lng: -71.060225, name: "Downtown Crossing"};
-	var qnctr = {lat: 42.251809, lng: -71.005409, name: "Quincy Center"};
-	var qamnl = {lat: 42.233391, lng: -71.007153, name: "Quincy Adams"};
-	var asmnl = {lat: 42.284652, lng: -71.06448899999999, name: "Ashmont"};
-	var wlsta = {lat: 42.2665139, lng: -71.0203369, name: "Wollaston"};
-	var fldcr = {lat: 42.300093, lng: -71.061667, name: "Fields Corner"};
-	var cntsq = {lat: 42.365486, lng: -71.103802, name: "Central Square"};
-	var brntn = {lat: 42.2078543, lng: -71.0011385, name: "Braintree"};
+	sstat = {lat: 42.352271, lng: -71.05524200000001, name: "South Station"};
+	andrw = {lat: 42.330154, lng: -71.057655, name: "Andrew"};
+	portr = {lat: 42.3884, lng: -71.11914899999999, name: "Porter Square"};
+	harsq = {lat: 42.373362, lng: -71.118956, name: "Harvard Square"};
+	jfk = {lat: 42.320685, lng: -71.052391, name: "JFK/UMass"};
+	shmnl = {lat: 42.31129, lng: -71.053331, name: "Savin Hill"};
+	pktrm = {lat: 42.35639457, lng: -71.0624242, name: "Park Street"};
+	brdwy = {lat: 42.342622, lng: -71.056967, name: "Broadway"};
+	nqncy = {lat: 42.275275, lng: -71.029583, name: "North Quincy"};
+	smmnl = {lat: 42.29312583, lng: -71.06573796000001, name: "Shawmut"};
+	davis = {lat: 42.39674, lng: -71.121815, name: "Davis"};
+	alfcl = {lat: 42.395428, lng: -71.142483, name: "Alewife"};
+	knncl = {lat: 42.36249079, lng: -71.08617653, name: "Kendall/MIT"};
+	chmnl = {lat: 42.361166, lng: -71.070628, name: "Charles/MGH"};
+	dwnxg = {lat: 42.355518, lng: -71.060225, name: "Downtown Crossing"};
+	qnctr = {lat: 42.251809, lng: -71.005409, name: "Quincy Center"};
+	qamnl = {lat: 42.233391, lng: -71.007153, name: "Quincy Adams"};
+	asmnl = {lat: 42.284652, lng: -71.06448899999999, name: "Ashmont"};
+	wlsta = {lat: 42.2665139, lng: -71.0203369, name: "Wollaston"};
+	fldcr = {lat: 42.300093, lng: -71.061667, name: "Fields Corner"};
+	cntsq = {lat: 42.365486, lng: -71.103802, name: "Central Square"};
+	brntn = {lat: 42.2078543, lng: -71.0011385, name: "Braintree"};
 	
 	winds = [
 	{lat: 42.395428, lng: -71.142483},
@@ -129,82 +131,79 @@ function initMap() {
                               'Error: Your browser doesn\'t support geolocation.');
         infoWindow.open(map);
     }
-
-    //mark stations w icon
-    a_stops = [17];
-	b_stops = [6];
-    for(var i = 0; i < 17; i++) {
-    	console.log(i);
-    	a_stops[i] = new google.maps.Marker({position: ashmont[i], map: map, icon: 'icon.png'});
-    	console.log(a_stops[i]);
-    	var wind = new google.maps.InfoWindow;
-		wind.setPosition(winds[i]);
-		a_stops[i].addListener('click', function() {
-      			wind.open(map, a_stops[i]);
-      		});
-		
-    	var request = new XMLHttpRequest();
-    	placeid = "place-" + stop_name[i];
- 		var url = "https://api-v3.mbta.com/predictions?filter[route]=Red&filter[stop]=" + placeid + "&page[limit]=10&page[offset]=0&sort=departure_time&api_key=6545bf2bfe4e40928aca721593594135";
-		request.open("GET", url, true);
-		
-
-    	request.onreadystatechange = function() {
-    		//console.log(i);
-    		console.log("here!");
-			if(request.readyState == 4 && request.status == 200) {
-				data = request.responseText;
-				content = JSON.parse(data);
-		
-				time = "";
-			var total = content.data.length;
-			for (j = 0; j < total; j++) {
-				word = content.data[j].attributes.arrival_time[11];
-				word += content.data[j].attributes.arrival_time[12];
-				word += content.data[j].attributes.arrival_time[13];
-				word += content.data[j].attributes.arrival_time[14];
-				word += content.data[j].attributes.arrival_time[15];
-				console.log(word);
-				time += word + "<br/>";
-			}
-			//i = 0;
-
-	 		wind.setContent(time);
-	 		
-			}
-		
-		}
-	// 	else if (request.readyState == 4 && request.status != 200) {
-	// 		time = "Error";
-	// 	}
-	// 	else if (request.readyState == 3) {
-	// 		time = "Loading...";
-	// 	}
-
-	// }
-	request.send();
-}
+    
+   
     // var b_stops = [6];
     // for(j = 0; j < 6; j++) {
     // 	b_stops[j] = new google.maps.Marker({position: braintree[j], map: map, icon: 'icon.png'});
     // }
     //render polyline
-	var ashmont = new google.maps.Polyline({
+	a = new google.maps.Polyline({
 		path: ashmont,
 		strokeColor: '#FF0000',
 		strokeOpacity: 1.0,
 		strokeWeight: 2
 	});
 
-	var braintree = new google.maps.Polyline({
+	b = new google.maps.Polyline({
 		path: braintree,
 		strokeColor: '#FF0000',
 		strokeOpacity: 1.0,
 		strokeWeight: 2
 	});
 	
- 	ashmont.setMap(map);
- 	braintree.setMap(map);
+ 	a.setMap(map);
+ 	b.setMap(map);
+}
+
+function loadContent() {
+	var nRequest = new Array();
+	for (var i=0; i<17; i++){
+   		(function(i) {
+      		nRequest[i] = new XMLHttpRequest();
+      		placeid = "place-" + stop_name[i];
+ 			var url = "https://api-v3.mbta.com/predictions?filter[route]=Red&filter[stop]=" + 
+ 					   placeid + 
+ 					  "&page[limit]=10&page[offset]=0&sort=departure_time&api_key=6545bf2bfe4e40928aca721593594135";
+			nRequest[i].open("GET", url, true);
+			var time = "";
+      		nRequest[i].onreadystatechange = function (oEvent) {
+         		if (nRequest[i].readyState === 4) {
+            		if (nRequest[i].status === 200) {
+            			data = nRequest[i].responseText;
+						content = JSON.parse(data);
+						//var total = content.data.length;
+						time = "";
+						for (j = 0; j < 4; j++) {
+							word = content.data[j].attributes.arrival_time[11];
+							word += content.data[j].attributes.arrival_time[12];
+							word += content.data[j].attributes.arrival_time[13];
+							word += content.data[j].attributes.arrival_time[14];
+							word += content.data[j].attributes.arrival_time[15];
+					
+							time += word + "<br/>";
+            			}
+            			cb(time, i);
+            			//console.log(time);
+
+            		} else {
+              			console.log("Error", nRequest[i].statusText);
+            		}
+         		}
+      		};
+      		nRequest[i].send(null);
+   		})(i);
+	}	
+}
+
+//mark stations w icon
+function cb(time, index) {
+	key = Object.keys(ashmont[index]);
+    var coords = ashmont[index];
+    var content = coords[key[2]];
+	var x = content+ "<br/>" + " Arrival Times: <br/>" + time;
+	var i = index;
+	make_window(x, i, ashmont);
 }
 
 function findDistance(coords1, coords2) {
@@ -232,52 +231,28 @@ function findDistance(coords1, coords2) {
 	return d;
 }
 
-// function loadContent(map) {
-// 	console.log("1");
-// 	var wind = new google.maps.InfoWindow;
+function make_window(time, i) {
+	wind = new google.maps.InfoWindow({ content: time });
+	marker = new google.maps.Marker({
+    	position: winds[i],
+    	map: map,
+    	icon:'icon.png',
+        info: time
+        });
+        
+        google.maps.event.addListener( marker, 'click', function() {
+  		wind.setContent( this.info );
+   		wind.open( map, this );
+	});	
 	
-// 	request = new XMLHttpRequest();
-// 	// placeid = "place-davis";
-// 	// var url = "https://api-v3.mbta.com/predictions?filter[route]=Red&filter[stop]=" + placeid + "&page[limit]=10&page[offset]=0&sort=departure_time&api_key=6545bf2bfe4e40928aca721593594135";
-// 	// console.log(url);
-// 	request.open("GET", 
-// 		"https://api-v3.mbta.com/predictions?filter[route]=Red&filter[stop]=place-davis&page[limit]=10&page[offset]=0&sort=departure_time&api_key=6545bf2bfe4e40928aca721593594135",
-// 		 true);
-	
-// 	request.onreadystatechange = function() {
-// 	if(request.readyState == 4 && request.status == 200) {
-// 		data = request.responseText;
-// 		content = JSON.parse(data);
+    	a_stops[i] = new google.maps.Marker({position: ashmont[i], map: map, icon: 'icon.png'});
+    	
+    	var wind = new google.maps.InfoWindow;
+		wind.setPosition(winds[i]);
 		
-// 		time = "";
-// 		var total = content.data.length;
-// 		for (i = 0; i < total; i++) {
-			
-// 			word = content.data[i].attributes.arrival_time[11];
-// 			word += content.data[i].attributes.arrival_time[12];
-// 			word += content.data[i].attributes.arrival_time[13];
-// 			word += content.data[i].attributes.arrival_time[14];
-// 			word += content.data[i].attributes.arrival_time[15];
-
-// 			time += word + "<br/>";
-// 		}
-// 		pos = {lat: 42.39674, lng: -71.121815};
+		a_stops[i].addListener('click', function() {
+      			wind.open(map, a_stops[i]);
+      		});
 		
-
-// 	 	a_stops[1].addListener('click', function() {
-//       		wind.setPosition(pos);
-// 	 		wind.setContent(time);
-//       		wind.open(map, pos);
-//       	});
-// 	}
-// 	else if (request.readyState == 4 && request.status != 200) {
-// 		time = "Error";
-// 	}
-// 	else if (request.readyState == 3) {
-// 		time = "Loading...";
-// 	}
-
-// 	}
-// 	request.send();
-
-// }
+	 		wind.setContent(time);
+}
