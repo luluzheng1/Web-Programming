@@ -74,9 +74,9 @@ function initMap() {
 	];
 	
 	icon = 'icon.png';
-	//initiate map at user's location
+	//initiate map at South Station
    	map = new google.maps.Map(document.getElementById('map'), {
-    center: davis, zoom: 14});
+    center: sstat, zoom: 14});
    	infoWindow = new google.maps.InfoWindow;
    	
    	if (navigator.geolocation) {
