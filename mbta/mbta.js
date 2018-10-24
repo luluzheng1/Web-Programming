@@ -1,9 +1,4 @@
-var map, infoWindow;
-var a_stops = [17];
-var b_stops = [6];
-var stop_name = [17];
-var winds = [17];
-
+var stops = [23];
 function initMap() {
 	sstat = {lat: 42.352271, lng: -71.05524200000001, name: "South Station"};
 	andrw = {lat: 42.330154, lng: -71.057655, name: "Andrew"};
@@ -45,28 +40,42 @@ function initMap() {
 	{lat: 42.31129, lng: -71.053331},
 	{lat: 42.300093, lng: -71.061667},
 	{lat: 42.29312583, lng: -71.06573796000001},
-	{lat: 42.284652, lng: -71.06448899999999}
+	{lat: 42.284652, lng: -71.06448899999999},
+	{lat: 42.31129, lng: -71.053331},
+	{lat: 42.275275, lng: -71.029583},
+	{lat: 42.251809, lng: -71.005409},
+	{lat: 42.233391, lng: -71.007153},
+	{lat: 42.2078543, lng: -71.0011385}
 	];
 
 	coordinates = [
-		sstat, andrw, portr, harsq, jfk, shmnl, pktrm, brdwy, nqncy, 
-		smmnl, davis, alfcl, knncl, chmnl, dwnxg, qnctr, qamnl, asmnl,
-		wlsta, fldcr, cntsq, brntn
+		alfcl, davis, portr, harsq, cntsq, knncl, chmnl, pktrm, dwnxg, 
+		sstat, brdwy, andrw, jfk, shmnl, fldcr, smmnl, asmnl, shmnl,
+		nqncy, qnctr, qamnl, brntn
+	];
+
+	closest = [
+		alfcl, davis, portr, harsq, cntsq, knncl, chmnl, pktrm, dwnxg, 
+		sstat, brdwy, andrw, jfk, shmnl, fldcr, smmnl, asmnl, shmnl,
+		nqncy, wlsta, qnctr, qamnl, brntn
 	];
 	//forking purposes
 	ashmont = [
 		alfcl, davis, portr, harsq, cntsq, knncl, chmnl, pktrm, dwnxg, 
 		sstat, brdwy, andrw, jfk, shmnl, fldcr, smmnl, asmnl 
-	];	  
+	];	
+
 	braintree = [
 		shmnl, nqncy, wlsta, qnctr, qamnl, brntn
 	];
 
 	stop_name = [
 		"alfcl", "davis", "portr", "harsq", "cntsq", "knncl", "chmnl", "pktrm", "dwnxg", 
-		"sstat", "brdwy", "andrw", "jfk", "shmnl", "fldcr", "smmnl", "asmnl" 
+		"sstat", "brdwy", "andrw", "jfk", "shmnl", "fldcr", "smmnl", "asmnl", "shmnl",
+		"nqncy", "qnctr", "qamnl", "brntn" 
 	];
-	var icon = 'icon.png';
+	
+	icon = 'icon.png';
 	//initiate map at user's location
    	map = new google.maps.Map(document.getElementById('map'), {
     center: davis, zoom: 14});
@@ -82,11 +91,13 @@ function initMap() {
       		position: {lat: position.coords.latitude, lng: position.coords.longitude},
       		map: map
       	});
+      	//mark wollaston
+      	Wollaston();
       	//finding nearest station
-      	var distance = findDistance(pos, coordinates[0]);
+      	var distance = findDistance(pos, closest[0]);
       	var stop_num = 0;
-      	for(var i = 0; i < 22; i++) {
-      		var temp = findDistance(pos, coordinates[i]);
+      	for(var i = 0; i < 23; i++) {
+      		var temp = findDistance(pos, closest[i]);
       		if(temp < distance) {
       			distance = temp;
       			stop_num = i;
@@ -131,12 +142,7 @@ function initMap() {
                               'Error: Your browser doesn\'t support geolocation.');
         infoWindow.open(map);
     }
-    
    
-    // var b_stops = [6];
-    // for(j = 0; j < 6; j++) {
-    // 	b_stops[j] = new google.maps.Marker({position: braintree[j], map: map, icon: 'icon.png'});
-    // }
     //render polyline
 	a = new google.maps.Polyline({
 		path: ashmont,
@@ -157,16 +163,18 @@ function initMap() {
 }
 
 function loadContent() {
+	var time = "";
 	var nRequest = new Array();
-	for (var i=0; i<17; i++){
+	for (var i= 0; i< 22; i++){ 
    		(function(i) {
       		nRequest[i] = new XMLHttpRequest();
+
       		placeid = "place-" + stop_name[i];
  			var url = "https://api-v3.mbta.com/predictions?filter[route]=Red&filter[stop]=" + 
  					   placeid + 
  					  "&page[limit]=10&page[offset]=0&sort=departure_time&api_key=6545bf2bfe4e40928aca721593594135";
 			nRequest[i].open("GET", url, true);
-			var time = "";
+			
       		nRequest[i].onreadystatechange = function (oEvent) {
          		if (nRequest[i].readyState === 4) {
             		if (nRequest[i].status === 200) {
@@ -174,17 +182,23 @@ function loadContent() {
 						content = JSON.parse(data);
 						//var total = content.data.length;
 						time = "";
+						console.log(i);
 						for (j = 0; j < 4; j++) {
+							if(content.data[j] == undefined ||
+								content.data[j].attributes.arrival_time == null) {
+								word = "Time Unavailable";
+							}
+							else
+							{
 							word = content.data[j].attributes.arrival_time[11];
 							word += content.data[j].attributes.arrival_time[12];
 							word += content.data[j].attributes.arrival_time[13];
 							word += content.data[j].attributes.arrival_time[14];
 							word += content.data[j].attributes.arrival_time[15];
-					
+							}
 							time += word + "<br/>";
             			}
             			cb(time, i);
-            			//console.log(time);
 
             		} else {
               			console.log("Error", nRequest[i].statusText);
@@ -198,12 +212,12 @@ function loadContent() {
 
 //mark stations w icon
 function cb(time, index) {
-	key = Object.keys(ashmont[index]);
-    var coords = ashmont[index];
+	key = Object.keys(coordinates[index]);
+    var coords = coordinates[index];
     var content = coords[key[2]];
 	var x = content+ "<br/>" + " Arrival Times: <br/>" + time;
 	var i = index;
-	make_window(x, i, ashmont);
+	make_window(x, i);
 }
 
 function findDistance(coords1, coords2) {
@@ -232,6 +246,7 @@ function findDistance(coords1, coords2) {
 }
 
 function make_window(time, i) {
+	//console.log(i);
 	wind = new google.maps.InfoWindow({ content: time });
 	marker = new google.maps.Marker({
     	position: winds[i],
@@ -245,14 +260,34 @@ function make_window(time, i) {
    		wind.open( map, this );
 	});	
 	
-    	a_stops[i] = new google.maps.Marker({position: ashmont[i], map: map, icon: 'icon.png'});
+    	stops[i] = new google.maps.Marker({position: coordinates[i], map: map, icon: 'icon.png'});
     	
     	var wind = new google.maps.InfoWindow;
 		wind.setPosition(winds[i]);
 		
-		a_stops[i].addListener('click', function() {
-      			wind.open(map, a_stops[i]);
+		stops[i].addListener('click', function() {
+      			wind.open(map, stops[i]);
       		});
 		
 	 		wind.setContent(time);
+}
+
+function Wollaston() {
+	var wollaston = new google.maps.Marker({
+      		position: {lat: 42.2665139, lng: -71.0203369},
+      		icon:'icon.png',
+      		map: map
+      	});
+	var pos = {
+            lat: 42.2665139,
+            lng: -71.0203369
+        };
+	wollaston_window = new google.maps.InfoWindow;
+	wollaston_window.setPosition(pos);
+	var content = "Wollaston" + "<br/>" + "Out of Service"
+	wollaston_window.setContent(content);
+
+      	wollaston.addListener('click', function() {
+      		wollaston_window.open(map, wollaston);
+      	});
 }
