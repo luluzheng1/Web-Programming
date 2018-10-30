@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Captain's Log</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+        function reload() {
+            elem = document.getElementById("log");
+            output = "";
+            
+            for(var i = 0; i < localStorage.length; i ++) {
+                console.log("hello");
+                output = output + "<p>" + time + "<br/>" +localStorage.getItem(localStorage.key(i));
+            }
+            elem.innerHTML = output;
+            console.log("in reload");
+        }
+
+        function store() {
+            elem = document.getElementById("log");
+            txt = document.getElementById("msg").value;
+            localStorage[new Date().getTime()] = txt;
+            time = new Date();
+            reload();
+        }
+
+        $(document).on('change','#msg', function() {
+            store();
+            reload();
+        });
+
+        for (i=0;i<localStorage.length;i++) 
+{
+// var key = localStorage.key(i);
+//     if(key != null) 
+//     {
+//     var value = localStorage.getItem(key); 
+//     $("#"+key).next(".dynamicList").empty();
+//     $("#"+key).next(".dynamicList").append(value);
+//     }
+// }
+      
+
+    </script>
+</head>
+
+<body>
+    <h1>Captain's Log</h1>
+    <h3>New entry: <input type="text" id="msg" name="msg" size="30" /></h3>
+    <div id="log"></div>
+</body>
+</html>
