@@ -8,35 +8,52 @@
     <link rel="stylesheet" href="style.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script>
-        function reload() {
-            elem = document.getElementById("log");
-            output = "";
-            time = new Date();
-            for(var i = 0; i < localStorage.length; i++) {
-                key = localStorage.key(i);
-                if(key != null) 
-                {
-                    var value = localStorage.getItem(key); 
-                    $("#"+key).next("#msg").empty();
-                    $("#"+key).next("#msg").append(value);
-                    output = output + "<p>" + time + "<br/>" + value; 
-                }
-            }
-            elem.innerHTML = output;
-        }
-
+        arr1 = [];
+        arr2 = [];
+        
         function store() {
             elem = document.getElementById("log");
             txt = document.getElementById("msg").value;
-            localStorage[new Date().getTime()] = txt;
+            date = new Date();
+            date = date.toString();
+            // arr1.push(txt);
+            // arr2.push(date);
+            var info = JSON.stringify(txt);
+            var time = JSON.stringify(date);
+            var value = localStorage.getItem(1);
+            date = localStorage.getItem(2);
+            value = value + info;
+            date = date + time;
+            localStorage[1] = value;
+            localStorage[2] = date;
         }
 
+        function reload() {
+            elem = document.getElementById("log");
+            output = "";
+
+                key1 = 1;
+                key2 = 2;
+                if(key1 != null & key2 != null) 
+                {
+                    a = localStorage.getItem(key1); 
+                    b= localStorage.getItem(key2); 
+                    // x = JSON.parse(a);
+                    // t = JSON.parse(b);
+                    
+                    for(j = 1; j <= 5; j++) {
+                        console.log("j is:" + j);
+                    output = output + "<p>" + a + "<br/>" + b + "<br/>"; 
+                    } 
+                }
+              elem.innerHTML = output;
+        }
         $(document).on('change','#msg', function() {
+             $('#msg').empty();
             store();
             reload();
         });
-
-      
+   
 
     </script>
 </head>
