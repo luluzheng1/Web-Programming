@@ -20,10 +20,6 @@
             arr2.push(date);
             var info = JSON.stringify(arr1);
             var time = JSON.stringify(arr2);
-            // var value = localStorage.getItem(1);
-            // date = localStorage.getItem(2);
-            // value = value + info;
-            // date = date + time;
             localStorage[1] = info;
             localStorage[2] = time;
         }
@@ -36,24 +32,21 @@
                 key2 = 2;
                 if(key1 != null & key2 != null) 
                 {
-                    a = localStorage.getItem(key1); 
-                    b= localStorage.getItem(key2); 
-                    x = JSON.parse(a);
-                    t = JSON.parse(b);
+                    info = localStorage.getItem(key1); 
+                    date= localStorage.getItem(key2); 
+                    txt = JSON.parse(info);
+                    time = JSON.parse(date);
                     
-                    for(j = 1; j <= x.length; j++) {
-                        console.log("j is:" + j);
-                    output = output + "<p>" + t[t.length-j] + "<br/>" + x[x.length-j] + "<br/>" ; 
+                    for(j = 1; j <= txt.length; j++) {
+                    output = output + "<p>" + time[time.length-j] + "<br/>" + txt[txt.length-j] + "<br/>" ; 
                     } 
                 }
               elem.innerHTML = output;
         }
         $(document).on('change','#msg', function() {
-             $('#msg').empty();
             store();
             reload();
         });
-   
 
     </script>
 </head>
