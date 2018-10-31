@@ -16,16 +16,16 @@
             txt = document.getElementById("msg").value;
             date = new Date();
             date = date.toString();
-            // arr1.push(txt);
-            // arr2.push(date);
-            var info = JSON.stringify(txt);
-            var time = JSON.stringify(date);
-            var value = localStorage.getItem(1);
-            date = localStorage.getItem(2);
-            value = value + info;
-            date = date + time;
-            localStorage[1] = value;
-            localStorage[2] = date;
+            arr1.push(txt);
+            arr2.push(date);
+            var info = JSON.stringify(arr1);
+            var time = JSON.stringify(arr2);
+            // var value = localStorage.getItem(1);
+            // date = localStorage.getItem(2);
+            // value = value + info;
+            // date = date + time;
+            localStorage[1] = info;
+            localStorage[2] = time;
         }
 
         function reload() {
@@ -38,12 +38,12 @@
                 {
                     a = localStorage.getItem(key1); 
                     b= localStorage.getItem(key2); 
-                    // x = JSON.parse(a);
-                    // t = JSON.parse(b);
+                    x = JSON.parse(a);
+                    t = JSON.parse(b);
                     
-                    for(j = 1; j <= 5; j++) {
+                    for(j = 1; j <= x.length; j++) {
                         console.log("j is:" + j);
-                    output = output + "<p>" + a + "<br/>" + b + "<br/>"; 
+                    output = output + "<p>" + t[t.length-j] + "<br/>" + x[x.length-j] + "<br/>" ; 
                     } 
                 }
               elem.innerHTML = output;
