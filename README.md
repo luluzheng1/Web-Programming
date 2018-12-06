@@ -1,0 +1,19 @@
+# COMP20 Learning Portfolio
+
+## What is this purpose of this Git repository? 
+Below are a few reasons why this Git repository exists: 
+- record the assignments completed throughout the semester
+- track improvements in programming using languages such as JavaScript and NodeJS
+- showcase projects that I have implemented
+- demonstrate the knowledge and skills I've acquired in this course
+
+## What was your favorite lab or assignment and why?
+My favorite assignment was Assignment #2, the MBTA Station. I enjoyed the assignment because it was my first major project after learning JavaScript. Implementing some features of the project touched on topics such as asynchronous JavaScript and XMLHttpRequest. It was also my first time implementing my own website using the Google Maps API. One of the challenges that I appreciate is learning how to read documentation and apply it in my code. 
+## How much do you think you have grown from day 1 of this course to now?
+I have learned a lot of material since the first day of COMP20. Prior to this semester I had zero experience with Web Programming, and now I know the basics of networking, HTTP, JavaScript, etc. and can hold a conversation with someone about Web Programming. I also got an opportunity to learn about styling using CSS, event handling, and asynchronous javaScript. Even more, I learned more about local storage, cookies, NoSQL database (MongoDB), Node.js, and a number of security issues such as XSS and database injection. Of course, I still have a long way to go but I am proud of the knowledge that I've attained this semester. 
+## What was the most important thing that you learned in this course? Cite two examples as evidence.
+One important thing I learned in this course is to be responsible of my own learning. Especially in a course that is under the branch of computer science, I've learned to not take class material as the answer to everything and to Google/ask for help when I am confused about a topic/assignment. For example, during assignment #3 I struggled with setting up a connection between database server on Heroku and my 2048 game server. I had to do many Google searches, consult TAs, and frequently check Piazza for clues. One big takeaways I got from this class was to embrace the importance of being able to learn on my own. Another time that I felt the need to remind myself this was during Assignment #2, where I did not understand how "AJAX" works from the class demonstration. While programming the XMLHttpRequest function, I kept receiving errors in the console. After some hours, many Google searches, and a lot of code fiddling, I figured out how to implement the function. It needed a callback function that included an event handler function. Times when I feel frustrated, I remind myself that I can do it as long as I put in the effort and time, considering the problems I have solved and the assignments I have completed even though I may have felt uncertain at the start of the project.
+## Now that you have finished the course, what topic would you like to delve deeper into?
+After working with MongoDB, I realized that I am very interested in databases. I will be taking the databases class offered at Tufts at some point during my time at Tufts. (I wasn't able to get in for next semester due to limited seats).
+I would also like to delve deeper into Networking and more about how the Internet really works behind the scenes, which is why I will be taking Networks next semester. 
+Lastly, I felt that I didn't spend much time with Security, since the only security vulnerabilities that I was able to identify were XSS, Database injection, and a permissive CORS policy. Therefore I will also probably take the Security Course at Tufts at some point in my time at Tufts. 
