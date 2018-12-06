@@ -1,0 +1,121 @@
+<!Doctype html>
+<html lang ="en">
+<head>
+	<meta charset="utf-8"/>
+	<link href="style.css" rel="stylesheet" />
+	<title>Assignment 4: Security and Privacy Assessment of Assignment 3
+	</title>
+</head>
+
+<body>
+	<h1> Introduction </h1>
+	<p> Provide a description of the product and what you were hired to do </p>
+	<h1> Methodology </h1>
+	<p> Describe your methodology pen testing the application, including the 
+	tools that you used </p>
+	<h1> Abstract of Findings </h1>
+	<p> Provide an overview of all the security and privacy issues you
+	identified. This section should be written for non-technical managers who 
+	do not have technical expertise and do not have time to read the entire 
+	document. Write this section using lay language. </p>
+	<h1> Issues Found </h1>
+	<h2> 1. Exploting Permissive CORS Policy </h2>
+	<p> The programmer decided to implement the wild card for the server's
+	CORS policy. </p>
+	<h3> Description of issue. How did you find it? A screenshot of problem is
+	excellent. </h3>
+	<p> response.header("Access-Control-Allow-Origin", "*"); </p>
+	<p> This is a security risk because such policy gives any site access the
+	server's response. Hence, an attacker can easily send an XHR request to
+	the programmer's site and steal valuable information. Allowing access from
+	al domains means that any domain can perform two-way interaction with the
+	application via this request. Hence, this security risk exposes the
+	programmer's site to a "man in the middle" attack. </p>
+	<h3> Location or page where issue was found </h3>
+	<p> In all three routes, POST /submit, GET /scores.json, and GET / </p>
+	<h3> Severity of issue </h3>
+	<p> When considering the severity of CORS security risks, we need to
+	factor in the degree of vulnearability CORS exposes to the public. In our
+	case, the information stored in the database is relative insensitive, thus 
+	it is not considered a big issue. However, in the real world, websites
+	that contains valuable personal information of users with a CORS security
+	leak would result in severe consequences. </p>
+	<h3> Proof of vulnerability. </h3> 
+	<p> As seen in line 25, 71, and 101 of index.js </p>
+	<h3> Resolution </h3>
+	<p> One suggestion in addressing this issue is adjusting the wild card to
+	only allow resources sharing for selected sites. </p>
+	<p>Access-Control-Allow-Origin: (insert url) </p>
+	<p> Origin specifies a URL and is allowed to make cross-domain requests. 
+	For example, when a site makes a request, <a href="
+	https://agile-scrubland-25052.herokuapp.com/">the request page</a>, checks
+	if the response header of that site is a permitted request domain. If it
+	is an unknown source, the requestd page triggers the XMLHttpRequest error
+	event and denies the response data. </p> 
+	<h3> Conclusion </h3>
+	<p> One possible future consideration is to disable CORS as a whole. Many
+	APIS, such as Twitter, Yelp!, FB, do not enable CORS. Instead, get/post
+	requests are made from the server-side. </p>
+	<h3> References </h3>
+	<ul>
+		<li><a href="https://stackoverflow.com/questions/12001269/what-are-the-
+		security-risks-of-setting-access-control-allow-origin">What Are the
+		Security Risks of Setting Access Control Allow Origin </a></li>
+		<li><a href="http://www.w3.org/wiki/CORS_Enabled">CORS W3.org</a></li>
+		<li><a href="https://stackoverflow.com/
+		questions/10636611/how-does-access-control-allow-origin-header-work">
+		How does Access Control Allow Origin Header Work</a></li>
+		<li><a href="https://piazza.com/class/jl49t7i5aty494?cid=419">Piazza
+		post @419</a></li>
+		<li><a href="https://piazza.com/class/jl49t7i5aty494?cid=410">Piazza
+		post @410 </a></li>
+		<li><a href="https://hackerone.com/reports/163491">Hackerone-CORS</a>
+		</li>
+	</ul>
+*******************************************************************************
+	<h2> 2. Database Injection </h2>
+	<p> The programmer did not protect against malicious data aggregation.</p>
+	<h3> Description of issue </h3>
+	<p> I was able to verify the security risk by searching using query parameters and the $ne operator.</p>
+	<p> https://agile-scrubland-25052.herokuapp.com/scores.json?username[$ne]=apple </p>
+	<p> Specifically, this URL address will display all the scores that do not have apple as the username. This is a security risk because attackers can provide a specially-crafted input(such as $ne) to take advantage of the search query. The attacker has access to data without authorization by tricking the database into providing too many results for a query. </p>
+	<h3> Location where issue was found </h3>
+	<p> In GET /scores.json</p>
+	<h3> Severity of issue </h3>
+	<p> This issue is high risk because by manipulating the search query, the attacker now easily has information of everything in the database. If the database was storing more valuable information, for example credit card or residential information, this would cause great loss to the company of that website. </p>
+	<h3> Proof of vulnerability </h3> 
+	<p><img src="database_injection.PNG" alt="database injection"></p>
+	<p> The image shows the results after searching for all the documents in the 2048 Gamecenter database that does not have the username "apple". In this case, all of the information is exposed to the attacker</p>
+	<h3> Resolution </h3>
+	<p> One suggestion in addressing this issue is to prevent database injection vulnerabilities in the first place by usng parameterized queries. These types of queries specify placeholders for parameters so that the database will treat them as data/string rather than a command. Another possible solution is to modify the query string to remove any potentially malicious query characters. The programmer may choose to implement a sanitize_query() function that modifies the string before the query is used to find documents in the database. </p>
+	<h3> Conclusion </h3>
+	<p> One possible future consideration is to look into the <a href="https://github.com/mganss/HtmlSanitizer">HtmlSanitizer .NET library</a> that is used for cleaning HTML fragments and document. This build is shown to be passing currently. </p>
+	<h3> References </h3>
+	<ul>
+		<li><a href="https://www.veracode.com/security/sql-injection">SQL Injection Cheat Sheet & Tutorial: Vulnerabilities & How to Prevent SQL Injection Attacks </a></li>
+		<li><a href="https://www.owasp.org/index.php/XSS_%28Cross_Site_Scripting%29_Prevention_Cheat_Sheet#RULE_.231_-_HTML_Escape_Before_Inserting_Untrusted_Data_into_HTML_Element_Content">XSS Prevention Cheat Sheet</a></li>
+	</ul>
+*******************************************************************************
+	<h2> 3. Database Injection </h2>
+	<p> The programmer did not protect against malicious data aggregation.</p>
+	<h3> Description of issue </h3>
+	<p> I was able to verify the security risk by searching using query parameters and the $ne operator.</p>
+	<p> https://agile-scrubland-25052.herokuapp.com/scores.json?username[$ne]=apple </p>
+	<p> Specifically, this URL address will display all the scores that do not have apple as the username. This is a security risk because attackers can provide a specially-crafted input(such as $ne) to take advantage of the search query. The attacker has access to data without authorization by tricking the database into providing too many results for a query. </p>
+	<h3> Location where issue was found </h3>
+	<p> In GET /scores.json</p>
+	<h3> Severity of issue </h3>
+	<p> This issue is high risk because by manipulating the search query, the attacker now easily has information of everything in the database. If the database was storing more valuable information, for example credit card or residential information, this would cause great loss to the company of that website. </p>
+	<h3> Proof of vulnerability </h3> 
+	<p><img src="database_injection.PNG" alt="database injection"></p>
+	<p> The image shows the results after searching for all the documents in the 2048 Gamecenter database that does not have the username "apple". In this case, all of the information is exposed to the attacker</p>
+	<h3> Resolution </h3>
+	<p> One suggestion in addressing this issue is to prevent database injection vulnerabilities in the first place by usng parameterized queries. These types of queries specify placeholders for parameters so that the database will treat them as data/string rather than a command. Another possible solution is to modify the query string to remove any potentially malicious query characters. The programmer may choose to implement a sanitize_query() function that modifies the string before the query is used to find documents in the database. </p>
+	<h3> Conclusion </h3>
+	<p> One possible future consideration is to look into the <a href="https://github.com/mganss/HtmlSanitizer">HtmlSanitizer .NET library</a> that is used for cleaning HTML fragments and document. This build is shown to be passing currently. </p>
+	<h3> References </h3>
+	<ul>
+		<li><a href="https://www.veracode.com/security/sql-injection">SQL Injection Cheat Sheet & Tutorial: Vulnerabilities & How to Prevent SQL Injection Attacks </a></li>
+		<li><a href="https://www.owasp.org/index.php/XSS_%28Cross_Site_Scripting%29_Prevention_Cheat_Sheet#RULE_.231_-_HTML_Escape_Before_Inserting_Untrusted_Data_into_HTML_Element_Content">XSS Prevention Cheat Sheet</a></li>
+	</ul>
+</body>
