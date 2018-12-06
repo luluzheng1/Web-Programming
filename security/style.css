@@ -1,0 +1,9 @@
+body{
+  background-color: white;
+  margin-left:5px;
+  margin-right: 50%;
+  margin-bottom:8%;
+  margin-top: 5%;
+  position: relative;
+  z-index: 1;
+}
