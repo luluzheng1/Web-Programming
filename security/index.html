@@ -9,31 +9,66 @@
 
 <body>
 	<h1> Introduction </h1>
-	<p> Provide a description of the product and what you were hired to do </p>
+	<p> I am hired as a security consultant to document and resolve the 
+	security and privacy issues in the applications. The objective is to
+	perform a security assessment on a potentially vulnerable web application.
+	In this case, the web application is Yishu Huang's Assignment 3, which is
+	a 2048 GameCenter that records and displays scores in the 2048 Database. 
+	</p>
 	<h1> Methodology </h1>
-	<p> Describe your methodology pen testing the application, including the 
-	tools that you used </p>
+	<p> I have used curl to examine various security leaks in Yishu's
+	Assignment 3. My methology to analyzing security issues has been a two
+	step process. First, I performed some XSS attack without reading the
+	source code, or "black box" testing. Then, I obtained accessed to Yishu's
+	source code of the application and was able to perform a manual code
+	review, and then go back to the application and attack it. Also known as
+	"white box" testing, this step has allowed me to discover problems such as
+	a permissive CORS policy. </p>
 	<h1> Abstract of Findings </h1>
-	<p> Provide an overview of all the security and privacy issues you
-	identified. This section should be written for non-technical managers who 
-	do not have technical expertise and do not have time to read the entire 
-	document. Write this section using lay language. </p>
+	<p> I was successfully able to identify three security and/or privacy
+	issues. First, the website is susceptible to malicious attacks as anyone
+	can modify the contents in the application. Second, the application has a
+	security risk where anyone can send a request to the programmer's site and
+	steal information. Third, the attacker can easily obtain information of
+	everything in the database. </p>
 	<h1> Issues Found </h1>
 	<h2> 1. Cross Site Scripting </h2>
 	<p> The programmer did not handle user input safely.</p>
 	<h3> Description of issue </h3>
 	<p> I was able to inject an alert box using the script tag.</p>
-	<p> curl --data "username=<script>alert(hello!)</script>&score=1&grid=[]" </p>
-	<p> Specifically, typing this curl command in terminal allows data to be entered to a Web application through an untrusted source. In our case, the username is intentionally manipulated to include dynamic content without being validated for malicious content. </p>
+	<p> curl --data "username=<script>alert(hello!)</script>&score=1&grid=[]"
+	</p>
+	<p> Specifically, typing this curl command in terminal allows data to be
+	entered to a Web application through an untrusted source. In our case, the
+	username is intentionally manipulated to include dynamic content without 
+	being validated for malicious content. </p>
 	<h3> Location where issue was found </h3>
 	<p> In POST /submit</p>
 	<h3> Severity of issue </h3>
-	<p> This issue is high risk because injecting malicious code in the form of a browser side script, the script can access any sensitive information retained by the browser and used with that site. Even though the alert box seems relatively unharmful, if annoying at most, the malicious script can rewrite the content of the HTML page and even redirect to another irreleant page. Allowing everyone to modify the content of a webpage is severe problem. </p>
+	<p> This issue is high risk because injecting malicious code in the form
+	of a browser side script, the script can access any sensitive information
+	retained by the browser and used with that site. Even though the alert box
+	seems relatively unharmful, if annoying at most, the malicious script can
+	rewrite the content of the HTML page and even redirect to another
+	irreleant page. Allowing everyone to modify the content of a webpage is
+	severe problem. </p>
 	<h3> Proof of vulnerability </h3> 
 	<p><img src="someimage.jpg" alt="xss_scripting"></p>
-	<p> The image shows the alert box after entering the curl command prompt in terminal and refreshing the gamecenter webpage.</p>
+	<p> The image shows the alert box after entering the curl command prompt
+	in terminal and refreshing the gamecenter webpage.</p>
 	<h3> Resolution </h3>
-	<p> There are several ways that may help websites prevent XSS from happening. The first method is to escape untrusted data before inserting into the HTML element content. Specifically, special characters, such as the < and > of the script tag, can be prevented with HTML entity encoding to prevent switching into execution context. Some of the other significant characters in XML can also be replaced with HTML entity encoding. Another suggestion is to change the Content-Type header from text/html to application/json. This instructs the brower to not misunderstand the content and execute injected script. Lastly, a safe JSON serializer is helpful because it can remove any embedded script tags and extract only the contents. Including require('validator') as part of index.js will validate and sanitize input strings. </p>
+	<p> There are several ways that may help websites prevent XSS from
+	happening. The first method is to escape untrusted data before inserting
+	into the HTML element content. Specifically, special characters, such as
+	the < and > of the script tag, can be prevented with HTML entity encoding
+	to prevent switching into execution context. Some of the other significant
+	characters in XML can also be replaced with HTML entity encoding. Another
+	suggestion is to change the Content-Type header from text/html to
+	application/json. This instructs the brower to not misunderstand the
+	content and execute injected script. Lastly, a safe JSON serializer is
+	helpful because it can remove any embedded script tags and extract only
+	the contents. Including require('validator') as part of index.js will
+	validate and sanitize input strings. </p>
 	<ul>
 		<li> & --> &amp </li>
 		<li> < --> &lt </li>
@@ -44,8 +79,12 @@
 	</ul>
 	<h3> References </h3>
 	<ul>
-		<li><a href="https://www.owasp.org/index.php/Cross-site_Scripting_(XSS)">Cross-site Scripting(XSS) </a></li>
-		<li><a href="https://www.owasp.org/index.php/XSS_%28Cross_Site_Scripting%29_Prevention_Cheat_Sheet#RULE_.231_-_HTML_Escape_Before_Inserting_Untrusted_Data_into_HTML_Element_Content">XSS Prevention Cheat Sheet</a></li><a href="https://www.npmjs.com/package/validator">Validator</a>
+		<li><a href="https://www.owasp.org/index.php/Cross-site_Scripting_(XSS)
+		">Cross-site Scripting(XSS) </a></li>
+		<li><a href="https://www.owasp.org/index.php/XSS_%28Cross_Site_Scriptin
+		g%29_Prevention_Cheat_Sheet#RULE_.231_-_HTML_Escape_Before_Inserting_Un
+		trusted_Data_into_HTML_Element_Content">XSS Prevention Cheat Sheet</a>
+		</li><a href="https://www.npmjs.com/package/validator">Validator</a>
 	</ul>
 	<br>
 	<h2> 2. Exploting Permissive CORS Policy </h2>
