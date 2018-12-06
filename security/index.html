@@ -3,59 +3,65 @@
 <head>
 	<meta charset="utf-8"/>
 	<link href="style.css" rel="stylesheet" />
-	<title>Assignment 4: Security and Privacy Assessment of Assignment 3
-	</title>
+	<title>Assignment 4 </title>
 </head>
 
 <body>
-	<h1> Introduction </h1>
-	<p> I am hired as a security consultant to document and resolve the 
-	security and privacy issues in the applications. The objective is to
-	perform a security assessment on a potentially vulnerable web application.
-	In this case, the web application is Yishu Huang's Assignment 3, which is
-	a 2048 GameCenter that records and displays scores in the 2048 Database. 
+	<h1> Assignment 4: Security and Privacy Assessment of Assignment 3 </h1>
+	<h2> Introduction </h2>
+	<p> I am hired as a security consultant to document and resolve security
+	and privacy issues in web applications. My objective is to perform a
+	security assessment on a potentially vulnerable web application. In this
+	case, the web application is Yishu Huang's Assignment 3, a 2048 Game 
+	Center that records and displays scores in the 2048 Database. 
 	</p>
-	<h1> Methodology </h1>
-	<p> I have used curl to examine various security leaks in Yishu's
-	Assignment 3. My methology to analyzing security issues has been a two
+	<h2> Methodology </h2>
+	<p> I have used curl as a tool to examine various security leaks in Yishu's
+	Assignment 3. My methology to analyzing security issues has been a two- 
 	step process. First, I performed some XSS attack without reading the
-	source code, or "black box" testing. Then, I obtained accessed to Yishu's
-	source code of the application and was able to perform a manual code
-	review, and then go back to the application and attack it. Also known as
-	"white box" testing, this step has allowed me to discover problems such as
-	a permissive CORS policy. </p>
-	<h1> Abstract of Findings </h1>
+	source code, or "black box" testing. Then, I obtained access to Yishu's
+	source code of her application, performed a manual code review, and then
+	re-attempted to attack her application. This is also known as "white box"
+	testing, which has allowed me to discover less noticeable problems such as
+	the source code's permissive CORS policy. </p>
+	<h2> Abstract of Findings </h2>
 	<p> I was successfully able to identify three security and/or privacy
-	issues. First, the website is susceptible to malicious attacks as anyone
-	can modify the contents in the application. Second, the application has a
-	security risk where anyone can send a request to the programmer's site and
-	steal information. Third, the attacker can easily obtain information of
-	everything in the database. </p>
-	<h1> Issues Found </h1>
-	<h2> 1. Cross Site Scripting </h2>
+	issues. First, the website is susceptible to malicious XSS attacks as 
+	anyone can modify the contents of the application. Second, anyone can send
+	a request to the application due to its unrestricted CORS policy and steal
+	information. Third, the attacker can easily obtain large quantities of 
+	information in the Mongo database. </p>
+	<h2> Issues Found </h2>
+	<h3> 1. Cross Site Scripting (XSS) </h3>
 	<p> The programmer did not handle user input safely.</p>
 	<h3> Description of issue </h3>
-	<p> I was able to inject an alert box using the script tag.</p>
-	<p> curl --data "username=<script>alert(hello!)</script>&score=1&grid=[]"
-	</p>
+	<p> I was able to redirect the webpage using the script tag.</p>
+	<p><img src="xss_redirect.PNG" alt="xss redirect code"></p>
 	<p> Specifically, typing this curl command in terminal allows data to be
-	entered to a Web application through an untrusted source. In our case, the
+	entered in a Web application through an untrusted source. In our case, the
 	username is intentionally manipulated to include dynamic content without 
-	being validated for malicious content. </p>
+	validating malicious intentions. 
+	<pre><code>"window.location='https://omfgdogs.com'"</code></pre> redirects 
+	the page to <a href=http://omfgdogs.com> omfgdogs.com </a>, which displays 
+	many dogs running aross a screen of rainbows.</p>
 	<h3> Location where issue was found </h3>
 	<p> In POST /submit</p>
 	<h3> Severity of issue </h3>
-	<p> This issue is high risk because injecting malicious code in the form
-	of a browser side script, the script can access any sensitive information
-	retained by the browser and used with that site. Even though the alert box
-	seems relatively unharmful, if annoying at most, the malicious script can
-	rewrite the content of the HTML page and even redirect to another
-	irreleant page. Allowing everyone to modify the content of a webpage is
+	<p> This issue is high risk because when an attaker is injecting malicious
+	code in the form of a browser side script, the script can access any
+	sensitive information retained by the browser and within that site. Even
+	though a page redirection isn't directly stealing sensitive information,
+	the malicious script changed the contents of the HTML page by redirecting 
+	to an irreleant page. While this can be a simple prank, if the website 
+	provides important services that is used many people, this kind of page 
+	redirection is dangerous. An attacker can set up a "fake" site that
+	collects personal information while pretending to be the authentic, 
+	original site. So, allowing everyone to modify the content of a webpage is 
 	severe problem. </p>
 	<h3> Proof of vulnerability </h3> 
-	<p><img src="someimage.jpg" alt="xss_scripting"></p>
-	<p> The image shows the alert box after entering the curl command prompt
-	in terminal and refreshing the gamecenter webpage.</p>
+	<p><img src="omfgdogs.png" alt="xss_scripting"></p>
+	<p> The image shows the redirected page after entering the curl command 
+	prompt in terminal and refreshing the gamecenter webpage.</p>
 	<h3> Resolution </h3>
 	<p> There are several ways that may help websites prevent XSS from
 	happening. The first method is to escape untrusted data before inserting
@@ -63,11 +69,11 @@
 	the < and > of the script tag, can be prevented with HTML entity encoding
 	to prevent switching into execution context. Some of the other significant
 	characters in XML can also be replaced with HTML entity encoding. Another
-	suggestion is to change the Content-Type header from text/html to
-	application/json. This instructs the brower to not misunderstand the
+	suggestion is to change the Content-Type header from 'text/html' to
+	'application/json'. This instructs the browwer to not misunderstand the
 	content and execute injected script. Lastly, a safe JSON serializer is
-	helpful because it can remove any embedded script tags and extract only
-	the contents. Including require('validator') as part of index.js will
+	helpful because it can remove embedded script tags and extract only the
+	contents. Lastly, including require('validator') as part of index.js will
 	validate and sanitize input strings. </p>
 	<ul>
 		<li> & --> &amp </li>
@@ -84,38 +90,40 @@
 		<li><a href="https://www.owasp.org/index.php/XSS_%28Cross_Site_Scriptin
 		g%29_Prevention_Cheat_Sheet#RULE_.231_-_HTML_Escape_Before_Inserting_Un
 		trusted_Data_into_HTML_Element_Content">XSS Prevention Cheat Sheet</a>
-		</li><a href="https://www.npmjs.com/package/validator">Validator</a>
+		</li>
+		<li><a href="https://www.npmjs.com/package/validator">Validator</a>
+		</li>
 	</ul>
-	<br>
-	<h2> 2. Exploting Permissive CORS Policy </h2>
-	<p> The programmer decided to implement the wild card for the server's
+	<hr>
+	<h3> 2. Exploiting Permissive CORS Policy </h3>
+	<p> The programmer decided to implement a wild card for the server's
 	CORS policy. </p>
-	<h3> Description of issue. How did you find it? A screenshot of problem is
-	excellent. </h3>
-	<p> response.header("Access-Control-Allow-Origin", "*"); </p>
+	<h3> Description of issue </h3>
+	<pre><code> response.header("Access-Control-Allow-Origin", "*"); </code>
+	</pre>
 	<p> This is a security risk because such policy gives any site access the
 	server's response. Hence, an attacker can easily send an XHR request to
 	the programmer's site and steal valuable information. Allowing access from
-	al domains means that any domain can perform two-way interaction with the
-	application via this request. Hence, this security risk exposes the
+	all domains means that any domain can perform a two-way interaction with
+	the application via this request. Hence, this security risk exposes the
 	programmer's site to a "man in the middle" attack. </p>
-	<h3> Location or page where issue was found </h3>
+	<h3> Location where issue was found </h3>
 	<p> In all three routes, POST /submit, GET /scores.json, and GET / </p>
 	<h3> Severity of issue </h3>
 	<p> When considering the severity of CORS security risks, we need to
-	factor in the degree of vulnearability CORS exposes to the public. In our
-	case, the information stored in the database is relative insensitive, thus 
-	it is not considered a big issue. However, in the real world, websites
-	that contains valuable personal information of users with a CORS security
+	factor in the degree of vulnearability that is exposed to the public. In 
+	our case, the information stored in the database is relative insensitive,
+	thus it is not considered a big issue. However, in the real world, websites
+	that contain valuable personal information of users with a CORS security
 	leak would result in severe consequences. </p>
-	<h3> Proof of vulnerability. </h3> 
-	<p> As seen in line 25, 71, and 101 of index.js </p>
+	<h3> Proof of vulnerability </h3> 
+	<p> As seen in lines 25, 71, and 101 of index.js </p>
 	<h3> Resolution </h3>
 	<p> One suggestion in addressing this issue is adjusting the wild card to
-	only allow resources sharing for selected sites. </p>
-	<p>Access-Control-Allow-Origin: (insert url) </p>
-	<p> Origin specifies a URL and is allowed to make cross-domain requests. 
-	For example, when a site makes a request, <a href="
+	only allow resource sharing for selected sites. </p>
+	<pre><code>Access-Control-Allow-Origin: [insert url]</code></pre>
+	<p> Only the specified URL is allowed to make cross-domain requests. For
+	example, when a site makes a request, <a href="
 	https://agile-scrubland-25052.herokuapp.com/">the request page</a>, checks
 	if the response header of that site is a permitted request domain. If it
 	is an unknown source, the requestd page triggers the XMLHttpRequest error
@@ -141,31 +149,32 @@
 		</li>
 	</ul>
 	<hr>
-	<h2> 3. Database Injection </h2>
+	<h3> 3. Database Injection </h3>
 	<p> The programmer did not protect against malicious data aggregation.</p>
 	<h3> Description of issue </h3>
-	<p> I was able to verify the security risk by searching using query 
+	<p> I was able to verify the security risk by using query 
 	parameters and the $ne operator.</p>
-	<p> https://agile-scrubland-25052.herokuapp.com/
-	scores.json?username[$ne]=apple </p>
+	<pre><code> https://agile-scrubland-25052.herokuapp.com/
+	scores.json?username[$ne]=apple </code></pre>
 	<p> Specifically, this URL address will display all the scores that do not
-	have apple as the username. This is a security risk because attackers can
+	have "apple" as the username. This is a security risk because attackers can
 	provide a specially-crafted input(such as $ne) to take advantage of the
 	search query. The attacker has access to data without authorization by
-	tricking the database into providing too many results for a query. </p>
+	tricking the database into providing too many results for one query
+	search. </p>
 	<h3> Location where issue was found </h3>
 	<p> In GET /scores.json</p>
 	<h3> Severity of issue </h3>
 	<p> This issue is high risk because by manipulating the search query, the
 	attacker now easily has information of everything in the database. If the
-	database was storing more valuable information, for example credit card or
+	database was storing valuable information, such as credit card or 
 	residential information, this would cause great loss to the company of
 	that website. </p>
 	<h3> Proof of vulnerability </h3> 
 	<p><img src="database_injection.PNG" alt="database injection"></p>
 	<p> The image shows the results after searching for all the documents in
-	the 2048 Gamecenter database that does not have the username "apple". In 
-	this case, all of the information is exposed to the attacker</p>
+	the 2048 Gamecenter database that don't have the username "apple". In 
+	this case, all of the information is exposed to the attacker.</p>
 	<h3> Resolution </h3>
 	<p> One suggestion in addressing this issue is to prevent database
 	injection vulnerabilities in the first place by usng parameterized
@@ -178,8 +187,8 @@
 	<h3> Conclusion </h3>
 	<p> One possible future consideration is to look into the <a href="
 	https://github.com/mganss/HtmlSanitizer">HtmlSanitizer .NET library</a>
-	that is used for cleaning HTML fragments and document. This build is shown 
-	to be passing currently. </p>
+	that is used for cleaning HTML fragments and documents. This build is 
+	shown to be passing currently. </p>
 	<h3> References </h3>
 	<ul>
 		<li><a href="https://www.veracode.com/security/sql-injection">SQL
@@ -191,3 +200,4 @@
 		</li>
 	</ul>
 </body>
+
