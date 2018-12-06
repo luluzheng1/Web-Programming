@@ -19,7 +19,36 @@
 	do not have technical expertise and do not have time to read the entire 
 	document. Write this section using lay language. </p>
 	<h1> Issues Found </h1>
-	<h2> 1. Exploting Permissive CORS Policy </h2>
+	<h2> 1. Cross Site Scripting </h2>
+	<p> The programmer did not handle user input safely.</p>
+	<h3> Description of issue </h3>
+	<p> I was able to inject an alert box using the script tag.</p>
+	<p> curl --data "username=<script>alert(hello!)</script>&score=1&grid=[]" </p>
+	<p> Specifically, typing this curl command in terminal allows data to be entered to a Web application through an untrusted source. In our case, the username is intentionally manipulated to include dynamic content without being validated for malicious content. </p>
+	<h3> Location where issue was found </h3>
+	<p> In POST /submit</p>
+	<h3> Severity of issue </h3>
+	<p> This issue is high risk because injecting malicious code in the form of a browser side script, the script can access any sensitive information retained by the browser and used with that site. Even though the alert box seems relatively unharmful, if annoying at most, the malicious script can rewrite the content of the HTML page and even redirect to another irreleant page. Allowing everyone to modify the content of a webpage is severe problem. </p>
+	<h3> Proof of vulnerability </h3> 
+	<p><img src="someimage.jpg" alt="xss_scripting"></p>
+	<p> The image shows the alert box after entering the curl command prompt in terminal and refreshing the gamecenter webpage.</p>
+	<h3> Resolution </h3>
+	<p> There are several ways that may help websites prevent XSS from happening. The first method is to escape untrusted data before inserting into the HTML element content. Specifically, special characters, such as the < and > of the script tag, can be prevented with HTML entity encoding to prevent switching into execution context. Some of the other significant characters in XML can also be replaced with HTML entity encoding. Another suggestion is to change the Content-Type header from text/html to application/json. This instructs the brower to not misunderstand the content and execute injected script. Lastly, a safe JSON serializer is helpful because it can remove any embedded script tags and extract only the contents. Including require('validator') as part of index.js will validate and sanitize input strings. </p>
+	<ul>
+		<li> & --> &amp </li>
+		<li> < --> &lt </li>
+		<li> > --> &quot </li>
+		<li> " --> &quot </li>
+		<li> ' --> &#x27 </li>
+		<li> / --> &#x2F </li>
+	</ul>
+	<h3> References </h3>
+	<ul>
+		<li><a href="https://www.owasp.org/index.php/Cross-site_Scripting_(XSS)">Cross-site Scripting(XSS) </a></li>
+		<li><a href="https://www.owasp.org/index.php/XSS_%28Cross_Site_Scripting%29_Prevention_Cheat_Sheet#RULE_.231_-_HTML_Escape_Before_Inserting_Untrusted_Data_into_HTML_Element_Content">XSS Prevention Cheat Sheet</a></li><a href="https://www.npmjs.com/package/validator">Validator</a>
+	</ul>
+	<br>
+	<h2> 2. Exploting Permissive CORS Policy </h2>
 	<p> The programmer decided to implement the wild card for the server's
 	CORS policy. </p>
 	<h3> Description of issue. How did you find it? A screenshot of problem is
@@ -72,50 +101,54 @@
 		<li><a href="https://hackerone.com/reports/163491">Hackerone-CORS</a>
 		</li>
 	</ul>
-*******************************************************************************
-	<h2> 2. Database Injection </h2>
-	<p> The programmer did not protect against malicious data aggregation.</p>
-	<h3> Description of issue </h3>
-	<p> I was able to verify the security risk by searching using query parameters and the $ne operator.</p>
-	<p> https://agile-scrubland-25052.herokuapp.com/scores.json?username[$ne]=apple </p>
-	<p> Specifically, this URL address will display all the scores that do not have apple as the username. This is a security risk because attackers can provide a specially-crafted input(such as $ne) to take advantage of the search query. The attacker has access to data without authorization by tricking the database into providing too many results for a query. </p>
-	<h3> Location where issue was found </h3>
-	<p> In GET /scores.json</p>
-	<h3> Severity of issue </h3>
-	<p> This issue is high risk because by manipulating the search query, the attacker now easily has information of everything in the database. If the database was storing more valuable information, for example credit card or residential information, this would cause great loss to the company of that website. </p>
-	<h3> Proof of vulnerability </h3> 
-	<p><img src="database_injection.PNG" alt="database injection"></p>
-	<p> The image shows the results after searching for all the documents in the 2048 Gamecenter database that does not have the username "apple". In this case, all of the information is exposed to the attacker</p>
-	<h3> Resolution </h3>
-	<p> One suggestion in addressing this issue is to prevent database injection vulnerabilities in the first place by usng parameterized queries. These types of queries specify placeholders for parameters so that the database will treat them as data/string rather than a command. Another possible solution is to modify the query string to remove any potentially malicious query characters. The programmer may choose to implement a sanitize_query() function that modifies the string before the query is used to find documents in the database. </p>
-	<h3> Conclusion </h3>
-	<p> One possible future consideration is to look into the <a href="https://github.com/mganss/HtmlSanitizer">HtmlSanitizer .NET library</a> that is used for cleaning HTML fragments and document. This build is shown to be passing currently. </p>
-	<h3> References </h3>
-	<ul>
-		<li><a href="https://www.veracode.com/security/sql-injection">SQL Injection Cheat Sheet & Tutorial: Vulnerabilities & How to Prevent SQL Injection Attacks </a></li>
-		<li><a href="https://www.owasp.org/index.php/XSS_%28Cross_Site_Scripting%29_Prevention_Cheat_Sheet#RULE_.231_-_HTML_Escape_Before_Inserting_Untrusted_Data_into_HTML_Element_Content">XSS Prevention Cheat Sheet</a></li>
-	</ul>
-*******************************************************************************
+	<hr>
 	<h2> 3. Database Injection </h2>
 	<p> The programmer did not protect against malicious data aggregation.</p>
 	<h3> Description of issue </h3>
-	<p> I was able to verify the security risk by searching using query parameters and the $ne operator.</p>
-	<p> https://agile-scrubland-25052.herokuapp.com/scores.json?username[$ne]=apple </p>
-	<p> Specifically, this URL address will display all the scores that do not have apple as the username. This is a security risk because attackers can provide a specially-crafted input(such as $ne) to take advantage of the search query. The attacker has access to data without authorization by tricking the database into providing too many results for a query. </p>
+	<p> I was able to verify the security risk by searching using query 
+	parameters and the $ne operator.</p>
+	<p> https://agile-scrubland-25052.herokuapp.com/
+	scores.json?username[$ne]=apple </p>
+	<p> Specifically, this URL address will display all the scores that do not
+	have apple as the username. This is a security risk because attackers can
+	provide a specially-crafted input(such as $ne) to take advantage of the
+	search query. The attacker has access to data without authorization by
+	tricking the database into providing too many results for a query. </p>
 	<h3> Location where issue was found </h3>
 	<p> In GET /scores.json</p>
 	<h3> Severity of issue </h3>
-	<p> This issue is high risk because by manipulating the search query, the attacker now easily has information of everything in the database. If the database was storing more valuable information, for example credit card or residential information, this would cause great loss to the company of that website. </p>
+	<p> This issue is high risk because by manipulating the search query, the
+	attacker now easily has information of everything in the database. If the
+	database was storing more valuable information, for example credit card or
+	residential information, this would cause great loss to the company of
+	that website. </p>
 	<h3> Proof of vulnerability </h3> 
 	<p><img src="database_injection.PNG" alt="database injection"></p>
-	<p> The image shows the results after searching for all the documents in the 2048 Gamecenter database that does not have the username "apple". In this case, all of the information is exposed to the attacker</p>
+	<p> The image shows the results after searching for all the documents in
+	the 2048 Gamecenter database that does not have the username "apple". In 
+	this case, all of the information is exposed to the attacker</p>
 	<h3> Resolution </h3>
-	<p> One suggestion in addressing this issue is to prevent database injection vulnerabilities in the first place by usng parameterized queries. These types of queries specify placeholders for parameters so that the database will treat them as data/string rather than a command. Another possible solution is to modify the query string to remove any potentially malicious query characters. The programmer may choose to implement a sanitize_query() function that modifies the string before the query is used to find documents in the database. </p>
+	<p> One suggestion in addressing this issue is to prevent database
+	injection vulnerabilities in the first place by usng parameterized
+	queries. These types of queries specify placeholders for parameters so
+	that the database will treat them as data/string rather than a command.
+	Another possible solution is to modify the query string to remove any
+	potentially malicious query characters. The programmer may choose to
+	implement a sanitize_query() function that modifies the string before the
+	query is used to find documents in the database. </p>
 	<h3> Conclusion </h3>
-	<p> One possible future consideration is to look into the <a href="https://github.com/mganss/HtmlSanitizer">HtmlSanitizer .NET library</a> that is used for cleaning HTML fragments and document. This build is shown to be passing currently. </p>
+	<p> One possible future consideration is to look into the <a href="
+	https://github.com/mganss/HtmlSanitizer">HtmlSanitizer .NET library</a>
+	that is used for cleaning HTML fragments and document. This build is shown 
+	to be passing currently. </p>
 	<h3> References </h3>
 	<ul>
-		<li><a href="https://www.veracode.com/security/sql-injection">SQL Injection Cheat Sheet & Tutorial: Vulnerabilities & How to Prevent SQL Injection Attacks </a></li>
-		<li><a href="https://www.owasp.org/index.php/XSS_%28Cross_Site_Scripting%29_Prevention_Cheat_Sheet#RULE_.231_-_HTML_Escape_Before_Inserting_Untrusted_Data_into_HTML_Element_Content">XSS Prevention Cheat Sheet</a></li>
+		<li><a href="https://www.veracode.com/security/sql-injection">SQL
+		Injection Cheat Sheet & Tutorial: Vulnerabilities & How to Prevent SQL
+		Injection Attacks </a></li>
+		<li><a href="https://www.owasp.org/index.php/XSS_%28Cross_Site_Scriptin
+		g%29_Prevention_Cheat_Sheet#RULE_.231_-_HTML_Escape_Before_Inserting_Un
+		trusted_Data_into_HTML_Element_Content">XSS Prevention Cheat Sheet</a>
+		</li>
 	</ul>
 </body>
